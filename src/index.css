@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", sans-serif;
+  
+  --color-brand-primary: #3b82f6; /* Blue 500 */
+  --color-brand-secondary: #a855f7; /* Purple 500 */
+  --color-brand-dark: #0a0c10;
+  --color-brand-light: #F9F9F9;
+  
+  --radius-4xl: 2rem;
+  --radius-5xl: 3rem;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-dark text-white font-sans antialiased selection:bg-brand-primary/30;
+  }
+}
+
+/* Glassmorphism Utilities */
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl;
+  }
+  
+  .glass-pill {
+    @apply bg-white/10 backdrop-blur-md border border-white/10 rounded-full;
+  }
+
+  .text-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary;
+  }
+}
+
+/* Mesh Gradient Background */
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--color-brand-dark);
+  overflow: hidden;
+}
+
+.mesh-ball-1 {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 50%;
+  height: 50%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0) 70%);
+  filter: blur(120px);
+}
+
+.mesh-ball-2 {
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0) 70%);
+  filter: blur(150px);
+}
+
+.mesh-ball-3 {
+  position: absolute;
+  top: 20%;
+  right: 10%;
+  width: 30%;
+  height: 40%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0) 70%);
+  filter: blur(100px);
+}
