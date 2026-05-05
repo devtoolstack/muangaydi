@@ -6,7 +6,7 @@ export interface Product {
   originalPrice?: string;
   image: string;
   category: string;
-  affiliateUrl: string;
+  productUrl: string;
   rating: number;
   reviews: number;
   isHot?: boolean;
@@ -31,7 +31,7 @@ export const MOCK_PRODUCTS: Product[] = [
     originalPrice: "9.500.000đ",
     image: "https://picsum.photos/seed/sony-xm5/600/400",
     category: "Điện tử",
-    affiliateUrl: "https://shopee.vn",
+    productUrl: "https://shopee.vn",
     rating: 4.9,
     reviews: 1240,
     isHot: true
@@ -44,7 +44,7 @@ export const MOCK_PRODUCTS: Product[] = [
     originalPrice: "4.500.000đ",
     image: "https://picsum.photos/seed/philips-airfryer/600/400",
     category: "Gia dụng",
-    affiliateUrl: "https://shopee.vn",
+    productUrl: "https://shopee.vn",
     rating: 4.8,
     reviews: 850
   },
@@ -55,7 +55,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: "29.990.000đ",
     image: "https://picsum.photos/seed/iphone15/600/400",
     category: "Điện tử",
-    affiliateUrl: "https://shopee.vn",
+    productUrl: "https://shopee.vn",
     rating: 5.0,
     reviews: 3200,
     isHot: true
@@ -68,7 +68,7 @@ export const MOCK_PRODUCTS: Product[] = [
     originalPrice: "3.500.000đ",
     image: "https://picsum.photos/seed/nike-pegasus/600/400",
     category: "Thời trang",
-    affiliateUrl: "https://shopee.vn",
+    productUrl: "https://shopee.vn",
     rating: 4.7,
     reviews: 640
   },
@@ -80,7 +80,7 @@ export const MOCK_PRODUCTS: Product[] = [
     originalPrice: "450.000đ",
     image: "https://picsum.photos/seed/neutrogena/600/400",
     category: "Làm đẹp",
-    affiliateUrl: "https://shopee.vn",
+    productUrl: "https://shopee.vn",
     rating: 4.6,
     reviews: 2100
   },
@@ -91,7 +91,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: "1.800.000đ",
     image: "https://picsum.photos/seed/philips-sonicare/600/400",
     category: "Sức khỏe",
-    affiliateUrl: "https://shopee.vn",
+    productUrl: "https://shopee.vn",
     rating: 4.8,
     reviews: 1100
   }

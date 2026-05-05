@@ -115,7 +115,7 @@ export default function ProductPage() {
               </div>
 
               <a 
-                href={product.affiliateUrl}
+                href={product.productUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white py-6 rounded-3xl font-black text-xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-all active:scale-[0.98] shadow-2xl shadow-brand-primary/30 uppercase tracking-tighter"

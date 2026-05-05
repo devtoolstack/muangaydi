@@ -73,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           <a 
-            href={product.affiliateUrl} 
+            href={product.productUrl} 
             target="_blank" 
             rel="noopener noreferrer"
             className="w-full bg-white text-black group-hover:bg-brand-primary group-hover:text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xl uppercase tracking-tighter text-sm"

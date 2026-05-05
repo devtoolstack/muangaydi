@@ -14,7 +14,7 @@ export default function Footer() {
               <span className="font-display font-black text-2xl tracking-tighter uppercase">Mua ngay đi</span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
-              Cổng thông tin mua sắm affiliate tin cậy, giúp bạn sở hữu những món đồ yêu thích với mức giá tối ưu nhất.
+              Cổng thông tin mua sắm tin cậy, giúp bạn sở hữu những món đồ yêu thích với mức giá tối ưu nhất.
             </p>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 glass border-white/10 rounded-xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">

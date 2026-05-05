@@ -21,7 +21,7 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
             originalPrice: row['Giá gốc'] ? (row['Giá gốc'].toString().includes('đ') ? row['Giá gốc'] : `${row['Giá gốc']}đ`) : undefined,
             image: row['Ảnh'] || 'https://picsum.photos/400/400',
             category: row['Danh mục'] || 'Chưa phân loại',
-            affiliateUrl: row['Link Affiliate'] || '#',
+            productUrl: row['Link Affiliate'] || '#',
             rating: 5,
             reviews: Math.floor(Math.random() * 500) + 50,
             isHot: row['Tình trạng'] === 'HOT' || row['Tình trạng'] === 'Săn Deal' || false,
