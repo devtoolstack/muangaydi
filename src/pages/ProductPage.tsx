@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, ShieldCheck, Truck, RefreshCcw, ArrowLeft, ShoppingBag, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Helmet } from 'react-helmet-async';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../ProductContext';
 
@@ -45,6 +46,16 @@ export default function ProductPage() {
 
   return (
     <div className="pt-24 pb-20">
+      <Helmet>
+        <title>{product.name} | Mua ngay đi</title>
+        <meta name="description" content={product.description.substring(0, 160)} />
+        <meta property="og:title" content={`${product.name} - Mua ngay đi`} />
+        <meta property="og:description" content={product.description.substring(0, 160)} />
+        <meta property="og:image" content={product.image} />
+        <meta property="twitter:title" content={`${product.name} - Mua ngay đi`} />
+        <meta property="twitter:description" content={product.description.substring(0, 160)} />
+        <meta property="twitter:image" content={product.image} />
+      </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mb-8 items-center flex gap-2 text-sm text-gray-400">

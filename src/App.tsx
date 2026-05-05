@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { useLocation, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -21,10 +22,11 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <ProductProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen relative">
+    <HelmetProvider>
+      <ProductProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="flex flex-col min-h-screen relative">
           {/* Mesh Background */}
           <div className="mesh-gradient">
             <div className="mesh-ball-1" />
@@ -43,5 +45,6 @@ export default function App() {
         </div>
       </Router>
     </ProductProvider>
+    </HelmetProvider>
   );
 }

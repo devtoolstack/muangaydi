@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import Hero from '../components/Hero';
 import ProductCard from '../components/ProductCard';
 import { CATEGORIES } from '../types';
@@ -10,12 +11,27 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const { products, categories, loading, error } = useProducts();
 
+  // Find featured product (most reviews/rating) for SEO image
+  const featuredProduct = products.length > 0 
+    ? [...products].sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews))[0]
+    : null;
+
   const filteredProducts = selectedCategory === "Tất cả" 
     ? products 
     : products.filter(p => p.category === selectedCategory);
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Mua ngay đi | Sản phẩm Trend & Giá Tốt</title>
+        <meta name="description" content="Nền tảng mua sắm hiện đại với các ưu đãi tốt nhất, thiết kế tối giản và trải nghiệm mượt mà." />
+        {featuredProduct && (
+          <>
+            <meta property="og:image" content={featuredProduct.image} />
+            <meta property="twitter:image" content={featuredProduct.image} />
+          </>
+        )}
+      </Helmet>
       <Hero productImage={products.length > 0 ? products[0].image : undefined} />
       
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
