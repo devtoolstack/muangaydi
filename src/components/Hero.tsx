@@ -25,42 +25,39 @@ export default function Hero({ productImage, featuredProduct }: HeroProps) {
               <Zap size={14} fill="currentColor" />
               Săn Deal Giá Hời - Mỗi Ngày
             </div>
-            <h1 className="font-display text-6xl md:text-8xl font-black leading-[1.1] mb-6 tracking-tighter uppercase text-white">
+            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] mb-6 tracking-tighter uppercase text-white">
               Mua Sắm Thông Minh <br />
               <span className="text-gradient">Tiết Kiệm Tối Đa</span>
             </h1>
-            <p className="text-slate-400 text-xl md:text-2xl max-w-lg mb-10 leading-relaxed font-medium">
+            <p className="text-slate-400 text-lg sm:text-xl md:text-2xl max-w-lg mb-10 leading-relaxed font-medium">
               Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ, chốt đơn ngay không cần lo giá!
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <Link 
                 to={heroLink}
-                className="bg-gradient-to-r from-brand-primary to-brand-secondary text-white px-10 py-5 rounded-2xl font-black text-lg flex items-center gap-2 hover:opacity-90 transition-all group active:scale-95 shadow-2xl shadow-brand-primary/20 uppercase tracking-tight cursor-pointer"
+                className="bg-gradient-to-r from-brand-primary to-brand-secondary text-white px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-black text-base sm:text-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all group active:scale-95 shadow-2xl shadow-brand-primary/20 uppercase tracking-tight cursor-pointer"
               >
                 Xem Deal HOT nhất <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
                 to={heroLink}
-                className="bg-white/10 backdrop-blur-xl border border-white/20 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-white/20 transition-all active:scale-95 uppercase tracking-tight cursor-pointer flex items-center justify-center"
+                className="bg-white/10 backdrop-blur-xl border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-black text-base sm:text-lg hover:bg-white/20 transition-all active:scale-95 uppercase tracking-tight cursor-pointer flex items-center justify-center"
               >
                 Voucher hôm nay
               </Link>
             </div>
 
-            <div className="mt-12 flex items-center gap-8">
+            <div className="mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-lg">
               <div>
-                <div className="text-3xl font-black font-display tracking-tight text-white">150k+</div>
-                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Người dùng tin dùng</div>
+                <div className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white line-clamp-1">150k+</div>
+                <div className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest leading-tight">Người dùng tin dùng</div>
               </div>
-              <div className="w-px h-10 bg-white/10" />
-              <div>
-                <div className="text-3xl font-black font-display tracking-tight text-white">1.2k+</div>
-                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Deal cập nhật mỗi ngày</div>
+              <div className="flex justify-center">
+                <div className="w-px h-10 bg-white/10" />
               </div>
-              <div className="w-px h-10 bg-white/10" />
               <div>
-                <div className="text-3xl font-black font-display tracking-tight text-white">24/7</div>
-                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Hỗ trợ săn voucher</div>
+                <div className="text-2xl sm:text-3xl font-black font-display tracking-tight text-white line-clamp-1">1.2k+</div>
+                <div className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-bold tracking-widest leading-tight">Deal mỗi ngày</div>
               </div>
             </div>
           </motion.div>

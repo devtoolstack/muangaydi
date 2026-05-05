@@ -56,7 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-slate-500 text-[10px]">({product.reviews})</span>
         </div>
         
-        <Link to={`/product/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-lg">
+        <Link to={`/product/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-base sm:text-lg">
           {product.name}
         </Link>
         

@@ -86,9 +86,19 @@ export default function HomePage() {
           )}
         </div>
 
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
-            <p className="text-gray-400">Chưa có sản phẩm nào trong danh mục này.</p>
+        {filteredProducts.length === 0 && !loading && (
+          <div className="text-center py-32 glass border-white/5 rounded-[40px] border-dashed">
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-500">
+              <Filter size={32} />
+            </div>
+            <h3 className="text-white font-black text-2xl uppercase tracking-tighter mb-2">Không tìm thấy deal nào</h3>
+            <p className="text-slate-500 max-w-sm mx-auto">Chưa có sản phẩm nào trong danh mục "{selectedCategory}". Hãy thử quay lại danh mục "Tất cả" nhé!</p>
+            <button 
+              onClick={() => setSelectedCategory("Tất cả")}
+              className="mt-8 bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-2xl font-bold transition-all"
+            >
+              Xem tất cả sản phẩm
+            </button>
           </div>
         )}
       </section>

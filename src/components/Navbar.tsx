@@ -57,21 +57,28 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 p-4 space-y-4">
+        <div className="md:hidden bg-brand-dark/95 backdrop-blur-2xl border-b border-white/10 p-6 space-y-6 animate-in slide-in-from-top duration-300">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
             <input 
               type="text" 
-              placeholder="Tìm kiếm..." 
-              className="w-full bg-gray-100 border-none rounded-full py-2 pl-10 pr-4 outline-none text-sm"
+              placeholder="Tìm kiếm sản phẩm..." 
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 outline-none text-white placeholder:text-slate-500 focus:ring-2 focus:ring-brand-primary/20"
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            {categories.map((cat) => (
-              <button key={cat} className="px-4 py-2 text-sm bg-white/5 border border-white/5 rounded-lg text-left text-slate-300">
-                {cat}
-              </button>
-            ))}
+          <div className="space-y-2">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 ml-2 mb-4">Danh mục sản phẩm</p>
+            <div className="grid grid-cols-1 gap-2">
+              {categories.map((cat) => (
+                <button key={cat} className="w-full px-4 py-3 text-sm bg-white/5 border border-white/5 rounded-xl text-left text-white font-bold hover:bg-brand-primary/20 transition-all flex items-center justify-between group">
+                  {cat}
+                  <ChevronDown className="-rotate-90 text-slate-500 group-hover:text-white transition-colors" size={16} />
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="pt-4 border-t border-white/5">
+             <Link to="/" className="block px-4 py-3 text-sm text-white font-bold hover:text-brand-primary transition-all">Khuyến mãi & Deals hời</Link>
           </div>
         </div>
       )}

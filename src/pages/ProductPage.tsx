@@ -106,28 +106,28 @@ export default function ProductPage() {
                   </span>
                 )}
               </div>
-              <h1 className="font-display text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tighter uppercase">
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tighter uppercase">
                 {product.name}
               </h1>
-              <div className="flex items-center gap-6">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={18} fill={i < Math.floor(product.rating) ? "currentColor" : "none"} className={i < Math.floor(product.rating) ? "text-amber-400" : "text-white/10"} />
                   ))}
                   <span className="ml-2 font-bold text-white">{product.rating}</span>
                 </div>
-                <div className="w-px h-4 bg-white/10" />
+                <div className="hidden sm:block w-px h-4 bg-white/10" />
                 <span className="text-slate-500 text-sm font-bold uppercase tracking-wider">{product.reviews} đánh giá</span>
               </div>
             </div>
-
-            <div className="p-10 glass border-white/20 rounded-[40px] mb-8 shadow-3xl text-center">
+ 
+            <div className="p-6 sm:p-10 glass border-white/20 rounded-[40px] mb-8 shadow-3xl text-center">
               <div className="mb-6">
                 <span className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 block">Giá đang áp dụng ưu đãi</span>
-                <div className="flex items-baseline justify-center gap-4">
-                  <span className="text-6xl font-black font-display text-white">{product.price}</span>
+                <div className="flex flex-wrap items-baseline justify-center gap-3 sm:gap-4">
+                  <span className="text-4xl sm:text-6xl font-black font-display text-white">{product.price}</span>
                   {product.originalPrice && (
-                    <span className="text-2xl text-slate-500 line-through font-bold">{product.originalPrice}</span>
+                    <span className="text-xl sm:text-2xl text-slate-500 line-through font-bold">{product.originalPrice}</span>
                   )}
                 </div>
               </div>
