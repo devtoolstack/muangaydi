@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import Papa from 'papaparse';
+import { slugify } from "./src/lib/utils";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,7 +66,7 @@ async function startServer() {
         const productId = url.split('/product/')[1];
         const rows = await fetchProducts();
         const product = rows.find(row => 
-          (row['Tên sản phẩm'] ? row['Tên sản phẩm'].toString().toLowerCase().replace(/\s+/g, '-') : '') === productId
+          row['Tên sản phẩm'] && slugify(row['Tên sản phẩm'].toString()) === productId
         );
 
         if (product) {
