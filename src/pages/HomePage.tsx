@@ -32,7 +32,10 @@ export default function HomePage() {
           </>
         )}
       </Helmet>
-      <Hero productImage={products.length > 0 ? products[0].image : undefined} />
+      <Hero 
+        productImage={featuredProduct?.image} 
+        featuredProduct={featuredProduct} 
+      />
       
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         {/* Category Header */}
