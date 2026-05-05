@@ -28,7 +28,20 @@ export default function ProductPage() {
     );
   }
 
-  const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+  const relatedProducts = products
+    .filter(p => p.id !== product.id)
+    .sort((a, b) => {
+      const aSameCat = a.category === product.category ? 1 : 0;
+      const bSameCat = b.category === product.category ? 1 : 0;
+      if (aSameCat !== bSameCat) return bSameCat - aSameCat;
+      
+      const aHot = a.isHot ? 1 : 0;
+      const bHot = b.isHot ? 1 : 0;
+      if (aHot !== bHot) return bHot - aHot;
+      
+      return (b.rating * b.reviews) - (a.rating * a.reviews);
+    })
+    .slice(0, 4);
 
   return (
     <div className="pt-24 pb-20">
@@ -135,7 +148,7 @@ export default function ProductPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mb-20"
+          className="mb-24"
         >
           <div className="glass border-white/10 rounded-[40px] p-8 md:p-12">
             <h3 className="font-display text-2xl font-black mb-8 uppercase tracking-widest text-slate-400 border-b border-white/5 pb-4">
@@ -147,16 +160,37 @@ export default function ProductPage() {
           </div>
         </motion.section>
 
-        {/* Related */}
+        {/* Related Section */}
         {relatedProducts.length > 0 && (
-          <section>
-            <h3 className="font-display text-2xl font-bold mb-8">Sản phẩm liên quan</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {relatedProducts.map(p => (
-                <ProductCard key={p.id} product={p} />
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="pb-20"
+          >
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+              <div>
+                <span className="text-brand-primary font-bold uppercase tracking-[0.3em] text-xs mb-4 block">Khám phá thêm</span>
+                <h3 className="font-display text-4xl md:text-5xl font-black uppercase tracking-tighter">Sản phẩm tương tự & Trend</h3>
+              </div>
+              <Link to="/" className="group flex items-center gap-2 text-slate-400 hover:text-white font-bold uppercase tracking-widest text-xs transition-colors">
+                Xem tất cả <ArrowLeft className="rotate-180 group-hover:translate-x-1 transition-transform" size={16} />
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {relatedProducts.map((p, index) => (
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                >
+                  <ProductCard product={p} />
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
         )}
       </div>
     </div>
