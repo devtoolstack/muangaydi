@@ -18,8 +18,12 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
             id: row['Tên sản phẩm'] ? slugify(row['Tên sản phẩm'].toString()) : Math.random().toString(36).substr(2, 9),
             name: row['Tên sản phẩm'] || '',
             description: row['Mô tả'] || row['Ghi chú'] || '',
-            price: row['Giá khuyến mãi'] ? (row['Giá khuyến mãi'].toString().includes('đ') ? row['Giá khuyến mãi'] : `${row['Giá khuyến mãi']}đ`) : '',
-            originalPrice: row['Giá gốc'] ? (row['Giá gốc'].toString().includes('đ') ? row['Giá gốc'] : `${row['Giá gốc']}đ`) : undefined,
+            price: row['Giá khuyến mãi'] 
+              ? (row['Giá khuyến mãi'].toString().includes('đ') ? row['Giá khuyến mãi'] : `${row['Giá khuyến mãi']}đ`) 
+              : (row['Giá gốc'] ? (row['Giá gốc'].toString().includes('đ') ? row['Giá gốc'] : `${row['Giá gốc']}đ`) : ''),
+            originalPrice: row['Giá khuyến mãi'] && row['Giá gốc']
+              ? (row['Giá gốc'].toString().includes('đ') ? row['Giá gốc'] : `${row['Giá gốc']}đ`) 
+              : undefined,
             image: row['Ảnh'] || 'https://picsum.photos/400/400',
             category: row['Danh mục'] || 'Chưa phân loại',
             productUrl: row['Link Affiliate'] || '#',
