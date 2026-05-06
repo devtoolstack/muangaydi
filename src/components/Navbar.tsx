@@ -33,16 +33,18 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            <div className="group relative">
-              <button className="flex items-center gap-1 text-sm font-medium text-slate-300 hover:text-white transition-colors">
+            <div className="group relative py-4">
+              <button className="flex items-center gap-1 text-sm font-medium text-slate-300 hover:text-white transition-colors h-full">
                 Danh mục <ChevronDown size={16} />
               </button>
-              <div className="absolute top-full right-0 mt-2 w-48 bg-brand-dark/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 p-2">
-                {categories.map((cat) => (
-                  <button key={cat} className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-colors">
-                    {cat}
-                  </button>
-                ))}
+              <div className="absolute top-full right-0 pt-2 w-48 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
+                <div className="bg-brand-dark/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl p-2">
+                  {categories.map((cat) => (
+                    <button key={cat} className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-colors">
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <Link to="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Khuyến mãi</Link>
