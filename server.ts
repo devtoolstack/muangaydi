@@ -61,6 +61,10 @@ async function startServer() {
       let description = "Khám phá những sản phẩm trend nhất với giá ưu đãi cực sốc.";
       let image = "https://images.unsplash.com/photo-1542491509-3001e1e1199a?q=80&w=1200&auto=format&fit=crop";
 
+      const protocol = req.get('x-forwarded-proto') || 'https';
+      const host = req.get('host');
+      const fullUrl = `${protocol}://${host}${url}`;
+
       // logic for Product Page SEO
       if (url.startsWith('/product/')) {
         const productId = url.split('/product/')[1];
@@ -71,17 +75,19 @@ async function startServer() {
 
         if (product) {
           title = `${product['Tên sản phẩm']} | Mua ngay đi`;
-          description = (product['Mô tả'] || product['Ghi chú'] || '').substring(0, 160);
-          image = product['Ảnh'] || image;
+          description = (product['Mô tả'] || product['Ghi chú'] || '').substring(0, 160).replace(/"/g, '&quot;');
+          image = (product['Ảnh'] || image).trim();
         }
       } else {
         // Home page or other, pick the best product for image
         const rows = await fetchProducts();
         if (rows.length > 0) {
-          // Just take the first one or a random hot one for the home thumbnail
-          image = rows[0]['Ảnh'] || image;
+          image = (rows[0]['Ảnh'] || image).trim();
         }
       }
+
+      // Ensure image URL is properly encoded for bots
+      const encodedImage = image.includes(' ') ? encodeURI(image) : image;
 
       // Inject meta tags into template
       const metaTags = `
@@ -89,21 +95,24 @@ async function startServer() {
         <meta name="description" content="${description}" />
         <meta property="og:title" content="${title}" />
         <meta property="og:description" content="${description}" />
-        <meta property="og:image" content="${image}" />
+        <meta property="og:image" content="${encodedImage}" />
+        <meta property="og:url" content="${fullUrl}" />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Mua ngay đi" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="${title}" />
         <meta name="twitter:description" content="${description}" />
-        <meta name="twitter:image" content="${image}" />
+        <meta name="twitter:image" content="${encodedImage}" />
       `;
 
-      // Replace existing title and meta if present, or insert into head
+      // Clean up existing tags to avoid conflicts and inject new ones
       let html = template;
-      if (html.includes('<title>')) {
-        html = html.replace(/<title>.*?<\/title>/, metaTags);
-      } else {
-        html = html.replace('</head>', `${metaTags}\n</head>`);
-      }
+      html = html.replace(/<title>.*?<\/title>/gi, '');
+      html = html.replace(/<meta name="description".*?>/gi, '');
+      html = html.replace(/<meta property="og:.*?".*?>/gi, '');
+      html = html.replace(/<meta name="twitter:.*?".*?>/gi, '');
+      
+      html = html.replace('</head>', `${metaTags}\n</head>`);
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e: any) {
