@@ -36,7 +36,7 @@ async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     vite = await createViteServer({
       server: { middlewareMode: true },
-      appType: "spa",
+      appType: "custom",
     });
     app.use(vite.middlewares);
   } else {
@@ -86,8 +86,21 @@ async function startServer() {
         }
       }
 
-      // Ensure image URL is properly encoded for bots
-      const encodedImage = image.includes(' ') ? encodeURI(image) : image;
+      // Ensure image URL is properly encoded and absolute
+      let encodedImage = image.trim();
+      if (!encodedImage.startsWith('http') && !encodedImage.startsWith('//')) {
+        if (encodedImage.startsWith('/')) {
+          encodedImage = `${protocol}://${host}${encodedImage}`;
+        } else {
+          encodedImage = `${protocol}://${host}/${encodedImage}`;
+        }
+      } else if (encodedImage.startsWith('//')) {
+        encodedImage = `${protocol}:${encodedImage}`;
+      }
+      
+      if (encodedImage.includes(' ')) {
+        encodedImage = encodeURI(encodedImage);
+      }
 
       // Inject meta tags into template
       const metaTags = `
@@ -96,6 +109,10 @@ async function startServer() {
         <meta property="og:title" content="${title}" />
         <meta property="og:description" content="${description}" />
         <meta property="og:image" content="${encodedImage}" />
+        <meta property="og:image:secure_url" content="${encodedImage}" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="${fullUrl}" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Mua ngay đi" />
@@ -103,6 +120,7 @@ async function startServer() {
         <meta name="twitter:title" content="${title}" />
         <meta name="twitter:description" content="${description}" />
         <meta name="twitter:image" content="${encodedImage}" />
+        <link rel="canonical" href="${fullUrl}" />
       `;
 
       // Clean up existing tags to avoid conflicts and inject new ones
