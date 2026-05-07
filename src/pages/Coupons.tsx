@@ -26,8 +26,13 @@ export default function Coupons() {
 
   if (loading) {
     return (
-      <div className="pt-32 pb-20 flex justify-center">
-        <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
+      <div className="pt-32 pb-20 px-4">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="h-12 w-64 bg-white/5 animate-pulse rounded-xl mx-auto mb-10"></div>
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-64 bg-white/5 animate-pulse rounded-2xl border border-white/10"></div>
+          ))}
+        </div>
       </div>
     );
   }

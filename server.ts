@@ -6,6 +6,7 @@ import fs from "fs";
 import Papa from 'papaparse';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import compression from 'compression';
 import { slugify } from "./src/lib/utils";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -157,6 +158,15 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Security & Performance Middleware
+  app.use(compression());
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+  });
+
   // Coupons API Endpoint with Cache logic
   app.get('/api/coupons', async (req, res) => {
     const now = Date.now();
@@ -175,18 +185,6 @@ async function startServer() {
     res.json(couponCache.data);
   });
 
-  // Debug endpoint to force refresh
-  app.get('/api/debug/refresh-coupons', async (req, res) => {
-    const scrapedData = await scrapeIPricedCoupons();
-    if (scrapedData.length > 0) {
-      couponCache.data = scrapedData;
-      couponCache.lastUpdate = Date.now();
-      couponCache.nextUpdateDelay = getRandomDelay();
-      return res.json({ success: true, count: scrapedData.length, data: scrapedData });
-    }
-    res.status(500).json({ success: false, message: 'Could not scrape coupons' });
-  });
-
   let vite: any;
   if (process.env.NODE_ENV !== "production") {
     vite = await createViteServer({
@@ -196,7 +194,10 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath, { index: false }));
+    app.use(express.static(distPath, { 
+      index: false,
+      maxAge: '1d' // Cache assets for 1 day
+    }));
   }
 
   app.get('*', async (req, res) => {
@@ -204,7 +205,8 @@ async function startServer() {
       const url = req.originalUrl;
       const protocol = req.get('x-forwarded-proto') || 'https';
       const host = req.get('host');
-      const fullUrl = `${protocol}://${host}${url}`;
+      const domain = `${protocol}://${host}`;
+      const fullUrl = `${domain}${url}`;
 
       // Handle robots.txt
       if (url === '/robots.txt') {
@@ -217,13 +219,13 @@ async function startServer() {
         const rows = await fetchProducts();
         const lastMod = new Date().toISOString().split('T')[0];
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-        sitemap += `  <url>\n    <loc>${protocol}://${host}/</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
-        sitemap += `  <url>\n    <loc>${protocol}://${host}/khuyen-mai</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
+        sitemap += `  <url>\n    <loc>${domain}/</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
+        sitemap += `  <url>\n    <loc>${domain}/khuyen-mai</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
         
         rows.forEach(row => {
           if (row['Tên sản phẩm']) {
             const slug = slugify(row['Tên sản phẩm'].toString());
-            sitemap += `  <url>\n    <loc>${protocol}://${host}/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+            sitemap += `  <url>\n    <loc>${domain}/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
           }
         });
         
@@ -244,7 +246,21 @@ async function startServer() {
       let title = "Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày";
       let description = "Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ, chốt đơn ngay không cần lo giá!";
       let image = "https://images.unsplash.com/photo-1542491509-3001e1e1199a?q=80&w=1200&auto=format&fit=crop";
-      let jsonLd = "";
+      let jsonLd = `
+        <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Mua ngay đi",
+            "url": "${domain}",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "${domain}/?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        </script>
+      `;
 
       // logic for Product Page SEO
       if (url.startsWith('/product/')) {
@@ -293,6 +309,18 @@ async function startServer() {
       } else if (url === '/khuyen-mai') {
         title = "Tổng Hợp Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi";
         description = "Lấy ngay mã giảm giá Shopee 50K, voucher Lazada 400K và freeship Tiki mới nhất hôm nay. Tiết kiệm tối đa khi mua sắm online.";
+        
+        jsonLd = `
+          <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              "name": "${title}",
+              "description": "${description}",
+              "url": "${fullUrl}"
+            }
+          </script>
+        `;
       } else {
         // Home page or other, pick the best product for image
         const rows = await fetchProducts();
@@ -336,6 +364,7 @@ async function startServer() {
         <meta name="twitter:description" content="${description}" />
         <meta name="twitter:image" content="${encodedImage}" />
         <link rel="canonical" href="${fullUrl}" />
+        <meta name="robots" content="index, follow" />
         ${jsonLd}
       `;
 
