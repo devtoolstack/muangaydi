@@ -1,3 +1,16 @@
+export interface Coupon {
+  id: string;
+  store: 'Shopee' | 'Lazada' | 'Tiki' | 'TikTok Shop' | 'Khác';
+  title: string;
+  code: string;
+  description: string;
+  expiryDate: string;
+  copyCount: number;
+  isVerified: boolean;
+  minSpend?: string;
+  discountValue: string;
+}
+
 export interface Product {
   id: string;
   name: string;

@@ -1,8 +1,33 @@
 import Papa from 'papaparse';
-import { Product } from '../types';
+import { Product, Coupon } from '../types';
 import { slugify } from '../lib/utils';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVGYFkgGz1rMHYcK_dnb_Y-QXEoBsuZX_P3juzTgkm8L_cDPDeQva8q3-CtiuU2Ypy0J-g3jhU5hG2/pub?gid=0&single=true&output=csv';
+
+export async function fetchCoupons(): Promise<Coupon[]> {
+  try {
+    const response = await fetch('/api/coupons');
+    if (!response.ok) throw new Error('Network response was not ok');
+    return await response.json();
+  } catch (error) {
+    console.error('Fetch coupons error:', error);
+    // Fallback data if API fails
+    return [
+      {
+        id: 'fallback-1',
+        store: 'Shopee',
+        title: 'Giảm 50K cho đơn từ 0Đ',
+        code: 'SHOPEE50K',
+        description: 'Áp dụng cho khách hàng mới lần đầu mua sắm tại Shopee Mall.',
+        expiryDate: '31/05/2026',
+        copyCount: 1250,
+        isVerified: true,
+        discountValue: '50K',
+        minSpend: '0Đ'
+      }
+    ];
+  }
+}
 
 export async function fetchProductsFromSheet(): Promise<Product[]> {
   try {

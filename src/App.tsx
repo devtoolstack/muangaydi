@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
+import Coupons from './pages/Coupons';
 import { ProductProvider } from './ProductContext';
 
 function ScrollToTop() {
@@ -39,6 +40,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/khuyen-mai" element={<Coupons />} />
             </Routes>
           </main>
           <Footer />
