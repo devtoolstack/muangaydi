@@ -377,15 +377,20 @@ async function startServer() {
         ${jsonLd}
       `;
 
-      // Clean up existing tags to avoid conflicts and inject new ones
+      // Clean up existing tags to avoid conflicts before injecting new ones
       let html = template;
       html = html.replace(/<title>.*?<\/title>/gi, '');
       html = html.replace(/<meta name="description".*?>/gi, '');
       html = html.replace(/<meta property="og:.*?".*?>/gi, '');
       html = html.replace(/<meta name="twitter:.*?".*?>/gi, '');
+      html = html.replace(/<meta name="google-site-verification".*?>/gi, '');
+      html = html.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<\/script>/gi, '');
       
-      // Inject meta tags right before the closing </head> tag for maximum compatibility
-      html = html.replace(/<\/head>/i, `${metaTags}\n</head>`);
+      // Inject meta tags immediately after the <head> tag for best verification results (as recommended by Google)
+      html = html.replace(/<head>/i, `<head>\n${metaTags}`);
+      
+      // Ensure the title we want is actually there (since we just deleted all titles)
+      // Actually, my metaTags already includes <title>
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e: any) {
