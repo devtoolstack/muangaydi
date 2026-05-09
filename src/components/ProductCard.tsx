@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </button>
 
       {/* Image section */}
-      <Link to={`/product/${product.id}`} className="block relative aspect-[4/3] overflow-hidden m-4 rounded-2xl border border-white/5 bg-slate-900">
+      <Link to={`/${product.id}`} className="block relative aspect-[4/3] overflow-hidden m-4 rounded-2xl border border-white/5 bg-slate-900">
         <img 
           src={product.image} 
           alt={`${product.name} - Deal hời giá rẻ tại Mua ngay đi`} 
@@ -57,7 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-slate-500 text-[9px] sm:text-[10px]">({product.reviews})</span>
         </div>
         
-        <Link to={`/product/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-sm sm:text-lg">
+        <Link to={`/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-sm sm:text-lg">
           {product.name}
         </Link>
         

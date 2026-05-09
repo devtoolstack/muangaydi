@@ -68,7 +68,7 @@ export default function ProductPage() {
       <Helmet>
         <title>{product.name} | Săn Deal Giá Hời - Mua ngay đi</title>
         <meta name="description" content={`${product.name}. ${product.description.substring(0, 150)}... Săn ngay deal hời tại Mua ngay đi.`} />
-        <link rel="canonical" href={window.location.href} />
+        <link rel="canonical" href={typeof window !== 'undefined' ? window.location.href : ''} />
         <meta property="og:title" content={`${product.name} - Mua ngay đi`} />
         <meta property="og:description" content={product.description.substring(0, 160)} />
         <meta property="og:image" content={product.image} />

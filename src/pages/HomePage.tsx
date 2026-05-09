@@ -65,7 +65,7 @@ export default function HomePage() {
       <Helmet>
         <title>Mua ngay đi | Sản phẩm Trend & Giá Tốt</title>
         <meta name="description" content="Nền tảng mua sắm hiện đại tổng hợp deal hời, sản phẩm xu hướng và mã giảm giá từ Shopee, Lazada, Tiki. Trải nghiệm mua sắm mượt mà nhất." />
-        <link rel="canonical" href={window.location.origin} />
+        <link rel="canonical" href={typeof window !== 'undefined' ? window.location.origin : ''} />
         {featuredProduct && (
           <>
             <meta property="og:image" content={featuredProduct.image} />

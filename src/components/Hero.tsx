@@ -10,7 +10,7 @@ interface HeroProps {
 }
 
 export default function Hero({ productImage, featuredProduct }: HeroProps) {
-  const heroLink = featuredProduct ? `/product/${featuredProduct.id}` : '#';
+  const heroLink = featuredProduct ? `/${featuredProduct.id}` : '#';
 
   return (
     <section className="relative pt-32 sm:pt-40 pb-16 sm:pb-20 overflow-hidden">

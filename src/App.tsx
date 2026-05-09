@@ -43,11 +43,11 @@ export default function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/khuyen-mai" element={<Coupons />} />
               <Route path="/dieu-khoan" element={<TermsPage />} />
               <Route path="/bao-mat" element={<PrivacyPage />} />
               <Route path="/chinh-sach" element={<PolicyPage />} />
+              <Route path="/:id" element={<ProductPage />} />
             </Routes>
           </main>
           <Footer />

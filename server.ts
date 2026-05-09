@@ -228,7 +228,7 @@ async function startServer() {
         rows.forEach(row => {
           if (row['Tên sản phẩm']) {
             const slug = slugify(row['Tên sản phẩm'].toString());
-            sitemap += `  <url>\n    <loc>${domain}/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+            sitemap += `  <url>\n    <loc>${domain}/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
           }
         });
         
@@ -283,9 +283,13 @@ async function startServer() {
         </script>
       `;
 
-      // logic for Product Page SEO
-      if (url.startsWith('/product/')) {
-        const productId = url.split('/product/')[1];
+      // logic for Product Page SEO or other pages
+      const pathSegments = url.split('/').filter(Boolean);
+      const firstSegment = pathSegments[0];
+      const knownStaticRoutes = ['khuyen-mai', 'dieu-khoan', 'bao-mat', 'chinh-sach', 'api', 'robots.txt', 'sitemap.xml', 'ads.txt'];
+
+      if (firstSegment && !knownStaticRoutes.includes(firstSegment) && !url.includes('.')) {
+        const productId = firstSegment;
         const rows = await fetchProducts();
         const product = rows.find(row => 
           row['Tên sản phẩm'] && slugify(row['Tên sản phẩm'].toString()) === productId
