@@ -376,7 +376,8 @@ async function startServer() {
       html = html.replace(/<meta property="og:.*?".*?>/gi, '');
       html = html.replace(/<meta name="twitter:.*?".*?>/gi, '');
       
-      html = html.replace('</head>', `${metaTags}\n</head>`);
+      // Inject meta tags right after the opening <head> tag for best verification results
+      html = html.replace(/<head>/i, `<head>\n${metaTags}`);
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e: any) {
