@@ -48,28 +48,28 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       {/* Content section */}
-      <div className="p-6 pt-2 flex-1 flex flex-col">
+      <div className="p-4 sm:p-6 pt-2 flex-1 flex flex-col">
         <div className="flex items-center gap-1 mb-2">
           <div className="flex text-amber-400">
-            <Star size={14} fill="currentColor" />
+            <Star size={12} className="sm:w-[14px] sm:h-[14px]" fill="currentColor" />
           </div>
-          <span className="text-xs font-bold text-slate-300">{product.rating}</span>
-          <span className="text-slate-500 text-[10px]">({product.reviews})</span>
+          <span className="text-[10px] sm:text-xs font-bold text-slate-300">{product.rating}</span>
+          <span className="text-slate-500 text-[9px] sm:text-[10px]">({product.reviews})</span>
         </div>
         
-        <Link to={`/product/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-base sm:text-lg">
+        <Link to={`/product/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-sm sm:text-lg">
           {product.name}
         </Link>
         
-        <p className="text-slate-400 text-sm mb-6 line-clamp-2 leading-relaxed">
+        <p className="text-slate-400 text-[11px] sm:text-sm mb-4 sm:mb-6 line-clamp-2 leading-relaxed">
           {product.description}
         </p>
 
-        <div className="mt-auto space-y-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl font-black font-display text-white">{product.price}</span>
+        <div className="mt-auto space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="text-xl sm:text-2xl font-black font-display text-white">{product.price}</span>
             {product.originalPrice && (
-              <span className="text-xs text-slate-500 line-through">{product.originalPrice}</span>
+              <span className="text-[10px] sm:text-xs text-slate-500 line-through">{product.originalPrice}</span>
             )}
           </div>
 
@@ -77,10 +77,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             href={product.productUrl} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="w-full bg-white text-black group-hover:bg-brand-primary group-hover:text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xl uppercase tracking-tighter text-sm"
+            className="w-full bg-white text-black group-hover:bg-brand-primary group-hover:text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xl uppercase tracking-tighter text-[11px] sm:text-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            SĂN DEAL NGAY <ArrowUpRight size={18} />
+            SĂN DEAL NGAY <ArrowUpRight size={16} className="sm:w-[18px] sm:h-[18px]" />
           </a>
         </div>
       </div>

@@ -78,29 +78,29 @@ export default function ProductPage() {
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <div className="mb-8 items-center flex gap-2 text-sm text-gray-400">
-          <Link to="/" className="hover:text-brand-primary transition-colors flex items-center gap-1">
-            <ArrowLeft size={14} /> Trang chủ
+        <div className="mb-6 sm:mb-8 items-center flex gap-2 text-[10px] sm:text-xs md:text-sm text-gray-400 overflow-hidden whitespace-nowrap overflow-ellipsis">
+          <Link to="/" className="hover:text-brand-primary transition-colors flex items-center gap-1 shrink-0">
+            <ArrowLeft size={14} /> <span className="hidden xs:inline">Trang chủ</span>
           </Link>
-          <span>/</span>
-          <span>{product.category}</span>
-          <span>/</span>
-          <span className="text-brand-dark font-medium">{product.name}</span>
+          <span className="shrink-0">/</span>
+          <span className="shrink-0">{product.category}</span>
+          <span className="shrink-0">/</span>
+          <span className="text-brand-dark font-medium truncate">{product.name}</span>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 mb-20">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 mb-16 sm:mb-20">
           {/* Images */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-4"
           >
-            <div className="rounded-[48px] overflow-hidden glass border-white/20 bg-slate-900 aspect-square shadow-2xl">
+            <div className="rounded-3xl sm:rounded-[48px] overflow-hidden glass border-white/20 bg-slate-900 aspect-square shadow-2xl">
               <img 
                 src={product.image} 
                 alt={`${product.name} - Hình ảnh sản phẩm chi tiết`} 
                 loading="lazy"
-                className="w-full h-full object-cover opacity-90"
+                className="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -112,13 +112,13 @@ export default function ProductPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <div className="mb-8">
-              <div className="flex flex-wrap gap-3 mb-6">
-                <span className="px-4 py-1.5 bg-brand-primary/20 border border-brand-primary/30 text-brand-primary rounded-full text-xs font-bold uppercase tracking-widest">
+            <div className="mb-6 sm:mb-8">
+              <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <span className="px-3 sm:px-4 py-1 sm:py-1.5 bg-brand-primary/20 border border-brand-primary/30 text-brand-primary rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest">
                   {product.category}
                 </span>
                 {product.status && (
-                  <span className={`px-4 py-1.5 border rounded-full text-xs font-bold uppercase tracking-widest ${
+                  <span className={`px-3 sm:px-4 py-1 sm:py-1.5 border rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest ${
                     product.status.toLowerCase().includes('hết') 
                       ? 'bg-slate-800 border-slate-700 text-slate-400' 
                       : 'bg-red-500/20 border-red-500/30 text-red-500'
@@ -127,51 +127,51 @@ export default function ProductPage() {
                   </span>
                 )}
               </div>
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tighter uppercase">
+              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-[1.1] tracking-tighter uppercase">
                 {product.name}
               </h1>
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-6">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={18} fill={i < Math.floor(product.rating) ? "currentColor" : "none"} className={i < Math.floor(product.rating) ? "text-amber-400" : "text-white/10"} />
+                    <Star key={i} size={16} fill={i < Math.floor(product.rating) ? "currentColor" : "none"} className={i < Math.floor(product.rating) ? "text-amber-400" : "text-white/10"} />
                   ))}
-                  <span className="ml-2 font-bold text-white">{product.rating}</span>
+                  <span className="ml-1.5 font-bold text-white text-sm sm:text-base">{product.rating}</span>
                 </div>
-                <div className="hidden sm:block w-px h-4 bg-white/10" />
-                <span className="text-slate-500 text-sm font-bold uppercase tracking-wider">{product.reviews} đánh giá</span>
+                <div className="w-px h-4 bg-white/10" />
+                <span className="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider">{product.reviews} đánh giá</span>
               </div>
             </div>
  
-            <div className="p-6 sm:p-10 glass border-white/20 rounded-[40px] mb-8 shadow-3xl text-center">
-              <div className="mb-6">
-                <span className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 block">Giá đang áp dụng ưu đãi</span>
+            <div className="p-6 sm:p-10 glass border-white/20 rounded-3xl sm:rounded-[40px] mb-8 shadow-3xl text-center">
+              <div className="mb-6 sm:mb-8">
+                <span className="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-3 sm:mb-4 block text-center">Giá đang áp dụng ưu đãi</span>
                 <div className="flex flex-wrap items-baseline justify-center gap-3 sm:gap-4">
-                  <span className="text-4xl sm:text-6xl font-black font-display text-white">{product.price}</span>
+                  <span className="text-3xl sm:text-5xl md:text-6xl font-black font-display text-white">{product.price}</span>
                   {product.originalPrice && (
-                    <span className="text-xl sm:text-2xl text-slate-500 line-through font-bold">{product.originalPrice}</span>
+                    <span className="text-base sm:text-xl md:text-2xl text-slate-500 line-through font-bold">{product.originalPrice}</span>
                   )}
                 </div>
               </div>
 
-              <div className="bg-brand-primary/10 border border-brand-primary/20 p-4 rounded-2xl mb-10 overflow-hidden relative">
-                <p className="text-brand-primary text-sm font-bold animate-pulse relative z-10">
+              <div className="bg-brand-primary/10 border border-brand-primary/20 p-3 sm:p-4 rounded-2xl mb-8 sm:mb-10 overflow-hidden relative">
+                <p className="text-brand-primary text-[11px] sm:text-sm font-bold animate-pulse relative z-10">
                   🔥 Chốt đơn ngay - Giá có thể tăng lại bất cứ lúc nào!
                 </p>
                 <div className="absolute inset-0 bg-brand-primary/5 -translate-x-full animate-[shimmer_2s_infinite]" />
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-3 sm:gap-4">
                 <a 
                   href={product.productUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-gradient-to-r from-brand-primary to-brand-secondary text-white py-6 rounded-3xl font-black text-xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-all active:scale-[0.98] shadow-2xl shadow-brand-primary/30 uppercase tracking-tighter"
+                  className="flex-1 bg-gradient-to-r from-brand-primary to-brand-secondary text-white py-4 sm:py-6 rounded-2xl sm:rounded-3xl font-black text-base sm:text-xl flex items-center justify-center gap-2 sm:gap-3 hover:scale-[1.02] transition-all active:scale-[0.98] shadow-2xl shadow-brand-primary/30 uppercase tracking-tighter"
                 >
-                  SĂN DEAL NGAY <ShoppingBag size={24} />
+                  SĂN DEAL NGAY <ShoppingBag size={20} className="sm:w-[24px] sm:h-[24px]" />
                 </a>
                 <button 
                   onClick={handleShare}
-                  className="w-20 bg-white/5 border border-white/10 text-white rounded-3xl flex items-center justify-center hover:bg-white/10 transition-all active:scale-95 group relative"
+                  className="w-16 sm:w-20 bg-white/5 border border-white/10 text-white rounded-2xl sm:rounded-3xl flex items-center justify-center hover:bg-white/10 transition-all active:scale-95 group relative"
                   title="Chia sẻ sản phẩm"
                 >
                   <AnimatePresence mode="wait">
@@ -182,7 +182,7 @@ export default function ProductPage() {
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
                       >
-                        <Check size={24} className="text-brand-primary" />
+                        <Check size={20} className="sm:w-[24px] sm:h-[24px] text-brand-primary" />
                       </motion.div>
                     ) : (
                       <motion.div
@@ -191,33 +191,51 @@ export default function ProductPage() {
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
                       >
-                        <Share2 size={24} className="group-hover:rotate-12 transition-transform" />
+                        <Share2 size={20} className="sm:w-[24px] sm:h-[24px] group-hover:rotate-12 transition-transform" />
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </button>
               </div>
 
-              <p className="mt-4 text-slate-500 text-[10px] font-bold uppercase tracking-widest">
-                * Click để được dẫn trực tiếp đến cửa hàng chính hãng
+              <p className="mt-4 text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
+                * Click để được dẫn trực tiếp đến sàn TMĐT
               </p>
             </div>
           </motion.div>
         </div>
 
+        {/* Mobile Sticky CTA */}
+        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-black/80 backdrop-blur-xl border-t border-white/10 lg:hidden pointer-events-none">
+          <div className="flex items-center justify-between gap-4 pointer-events-auto max-w-lg mx-auto">
+            <div className="flex flex-col">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Giá KM</span>
+              <span className="text-xl font-black text-white">{product.price}</span>
+            </div>
+            <a 
+              href={product.productUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 bg-brand-primary text-black py-4 px-6 rounded-2xl font-black text-sm text-center uppercase tracking-tight shadow-lg"
+            >
+              CHỐT DEAL NGAY
+            </a>
+          </div>
+        </div>
+
         {/* DETAILED DESCRIPTION SECTION */}
-        <div className="grid lg:grid-cols-3 gap-12 mb-24">
+        <div className="grid lg:grid-cols-3 gap-8 sm:gap-12 mb-16 sm:mb-24">
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="lg:col-span-2"
           >
-            <div className="glass border-white/10 rounded-[40px] p-8 md:p-12">
-              <h3 className="font-display text-2xl font-black mb-8 uppercase tracking-widest text-slate-400 border-b border-white/5 pb-4">
+            <div className="glass border-white/10 rounded-3xl sm:rounded-[40px] p-6 sm:p-8 md:p-12">
+              <h3 className="font-display text-xl sm:text-2xl font-black mb-6 sm:mb-8 uppercase tracking-widest text-slate-400 border-b border-white/5 pb-4">
                 Mô tả chi tiết
               </h3>
-              <div className="text-slate-300 text-lg leading-relaxed whitespace-pre-line">
+              <div className="text-slate-300 text-base sm:text-lg leading-relaxed whitespace-pre-line">
                 {product.description}
               </div>
             </div>
@@ -229,27 +247,27 @@ export default function ProductPage() {
             transition={{ delay: 0.35 }}
             className="space-y-6"
           >
-            <div className="glass border-brand-primary/20 bg-brand-primary/5 rounded-[32px] p-8">
-              <h3 className="text-white font-black uppercase tracking-tight mb-6">Tại sao nên chọn?</h3>
+            <div className="glass border-brand-primary/20 bg-brand-primary/5 rounded-3xl p-6 sm:p-8">
+              <h3 className="text-white font-black uppercase tracking-tight mb-6 text-base sm:text-lg">Tại sao nên chọn?</h3>
               <ul className="space-y-4">
                 <li className="flex gap-3 text-slate-300 text-sm">
-                  <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center shrink-0 text-black font-bold">✓</div>
-                  <span>Giá tốt nhất thời điểm hiện tại so với các shop khác.</span>
+                  <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center shrink-0 text-black font-bold text-[10px]">✓</div>
+                  <span>Giá tốt nhất tại thời điểm hiện tại.</span>
                 </li>
                 <li className="flex gap-3 text-slate-300 text-sm">
-                  <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center shrink-0 text-black font-bold">✓</div>
-                  <span>Sản phẩm nằm trong TOP TREND được cộng đồng săn đón.</span>
+                  <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center shrink-0 text-black font-bold text-[10px]">✓</div>
+                  <span>Sản phẩm TOP TREND cộng đồng săn đón.</span>
                 </li>
                 <li className="flex gap-3 text-slate-300 text-sm">
-                  <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center shrink-0 text-black font-bold">✓</div>
-                  <span>Đã được kiểm chứng chất lượng qua {product.reviews} đánh giá thực tế.</span>
+                  <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center shrink-0 text-black font-bold text-[10px]">✓</div>
+                  <span>Chất lượng từ {product.reviews} đánh giá thực.</span>
                 </li>
               </ul>
             </div>
 
-            <div className="glass border-white/10 rounded-[32px] p-8">
-              <h3 className="text-white font-black uppercase tracking-tight mb-4">Cam kết</h3>
-              <div className="space-y-4 text-xs text-slate-400 font-bold uppercase tracking-widest">
+            <div className="glass border-white/10 rounded-3xl p-6 sm:p-8">
+              <h3 className="text-white font-black uppercase tracking-tight mb-4 text-base sm:text-lg">Cam kết</h3>
+              <div className="space-y-4 text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-widest">
                 <div className="flex items-center gap-3">
                   <ShieldCheck size={16} className="text-brand-primary" /> 100% Chính hãng
                 </div>
