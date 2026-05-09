@@ -25,6 +25,7 @@ export default function HomePage() {
       <Helmet>
         <title>Mua ngay đi | Sản phẩm Trend & Giá Tốt</title>
         <meta name="description" content="Nền tảng mua sắm hiện đại với các ưu đãi tốt nhất, thiết kế tối giản và trải nghiệm mượt mà." />
+        <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
         {featuredProduct && (
           <>
             <meta property="og:image" content={featuredProduct.image} />

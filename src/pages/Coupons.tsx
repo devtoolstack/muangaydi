@@ -39,6 +39,11 @@ export default function Coupons() {
 
   return (
     <div className="pt-32 pb-20 px-4">
+      <Helmet>
+        <title>Săn Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi</title>
+        <meta name="description" content="Tổng hợp mã giảm giá Shopee, Lazada, Tiki mới nhất. Cập nhật liên tục, săn deal hời mỗi ngày cùng MuaNgayDi." />
+        <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
+      </Helmet>
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center">
           <motion.h1 
