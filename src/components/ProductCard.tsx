@@ -40,7 +40,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       <Link to={`/product/${product.id}`} className="block relative aspect-[4/3] overflow-hidden m-4 rounded-2xl border border-white/5 bg-slate-900">
         <img 
           src={product.image} 
-          alt={product.name} 
+          alt={`${product.name} - Deal hời giá rẻ tại Mua ngay đi`} 
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
           referrerPolicy="no-referrer"
         />

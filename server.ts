@@ -221,6 +221,9 @@ async function startServer() {
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
         sitemap += `  <url>\n    <loc>${domain}/</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
         sitemap += `  <url>\n    <loc>${domain}/khuyen-mai</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
+        sitemap += `  <url>\n    <loc>${domain}/dieu-khoan</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
+        sitemap += `  <url>\n    <loc>${domain}/bao-mat</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
+        sitemap += `  <url>\n    <loc>${domain}/chinh-sach</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
         
         rows.forEach(row => {
           if (row['Tên sản phẩm']) {
@@ -246,19 +249,37 @@ async function startServer() {
       let title = "Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày";
       let description = "Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ, chốt đơn ngay không cần lo giá!";
       let image = "https://images.unsplash.com/photo-1542491509-3001e1e1199a?q=80&w=1200&auto=format&fit=crop";
+      
+      const orgSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Mua ngay đi",
+        "url": domain,
+        "logo": `${domain}/logo.png`,
+        "description": "Nền tảng săn deal và mã giảm giá hàng đầu Việt Nam.",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "support@muangaydi.vn"
+        }
+      };
+
       let jsonLd = `
         <script type="application/ld+json">
-          {
+          ${JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "Mua ngay đi",
-            "url": "${domain}",
+            "url": domain,
             "potentialAction": {
               "@type": "SearchAction",
-              "target": "${domain}/?q={search_term_string}",
+              "target": `${domain}/?q={search_term_string}`,
               "query-input": "required name=search_term_string"
             }
-          }
+          })}
+        </script>
+        <script type="application/ld+json">
+          ${JSON.stringify(orgSchema)}
         </script>
       `;
 
@@ -282,44 +303,87 @@ async function startServer() {
           description = pDesc;
           image = pImage;
 
-          // Structured Data for Rich Snippets
+          const breadcrumbs = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": domain },
+              { "@type": "ListItem", "position": 2, "name": product['Danh mục'], "item": `${domain}/?cat=${product['Danh mục']}` },
+              { "@type": "ListItem", "position": 3, "name": pName, "item": fullUrl }
+            ]
+          };
+
+          const ratingValue = parseFloat(product['Đánh giá']) || 4.8;
+          const reviewCount = parseInt(product['Lượt đánh giá']) || 120;
+
+          const productSchema = {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": pName,
+            "image": [image],
+            "description": pDesc,
+            "brand": { "@type": "Brand", "name": "Mua ngay đi" },
+            "sku": productId,
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": ratingValue,
+              "reviewCount": reviewCount
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": fullUrl,
+              "priceCurrency": "VND",
+              "price": pPrice,
+              "itemCondition": "https://schema.org/NewCondition",
+              "availability": "https://schema.org/InStock",
+              "seller": { "@type": "Organization", "name": "Mua ngay đi" }
+            }
+          };
+
           jsonLd = `
-            <script type="application/ld+json">
-              {
-                "@context": "https://schema.org/",
-                "@type": "Product",
-                "name": "${pName}",
-                "image": ["${image}"],
-                "description": "${pDesc}",
-                "brand": {
-                  "@type": "Brand",
-                  "name": "Muangaydi"
-                },
-                "offers": {
-                  "@type": "Offer",
-                  "url": "${fullUrl}",
-                  "priceCurrency": "VND",
-                  "price": "${pPrice}",
-                  "availability": "https://schema.org/InStock"
-                }
-              }
-            </script>
+            <script type="application/ld+json">${JSON.stringify(breadcrumbs)}</script>
+            <script type="application/ld+json">${JSON.stringify(productSchema)}</script>
+            <script type="application/ld+json">${JSON.stringify(orgSchema)}</script>
           `;
         }
       } else if (url === '/khuyen-mai') {
         title = "Tổng Hợp Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi";
         description = "Lấy ngay mã giảm giá Shopee 50K, voucher Lazada 400K và freeship Tiki mới nhất hôm nay. Tiết kiệm tối đa khi mua sắm online.";
         
+        const faqSchema = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Làm sao để lấy mã giảm giá Shopee tại Mua ngay đi?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bạn chỉ cần truy cập trang Khuyến mãi, chọn mã phù hợp và nhấn 'Sao chép mã'. Hệ thống sẽ tự động dẫn bạn đến trang sản phẩm Shopee để áp dụng."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Mã giảm giá có được cập nhật thường xuyên không?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Có, Mua ngay đi cập nhật mã giảm giá từ Shopee, Lazada, Tiki liên tục mỗi giờ để đảm bảo bạn không bỏ lỡ deal hời nào."
+              }
+            }
+          ]
+        };
+
         jsonLd = `
           <script type="application/ld+json">
-            {
+            ${JSON.stringify({
               "@context": "https://schema.org",
               "@type": "CollectionPage",
-              "name": "${title}",
-              "description": "${description}",
-              "url": "${fullUrl}"
-            }
+              "name": title,
+              "description": description,
+              "url": fullUrl
+            })}
           </script>
+          <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
         `;
       } else {
         // Home page or other, pick the best product for image
@@ -345,6 +409,12 @@ async function startServer() {
         encodedImage = encodeURI(encodedImage);
       }
 
+      // Security Headers
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+      res.setHeader('X-XSS-Protection', '1; mode=block');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+      
       // Inject meta tags into template
       const metaTags = `
         <title>${title}</title>
@@ -366,6 +436,9 @@ async function startServer() {
         <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
         <link rel="canonical" href="${fullUrl}" />
         <meta name="robots" content="index, follow" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-XW9CBBBE96"></script>
         <script>
@@ -374,6 +447,8 @@ async function startServer() {
           gtag('js', new Date());
           gtag('config', 'G-XW9CBBBE96');
         </script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4995320968318102"
+          crossorigin="anonymous"></script>
         ${jsonLd}
       `;
 

@@ -41,8 +41,9 @@ export default function Coupons() {
   return (
     <div className="pt-32 pb-20 px-4">
       <Helmet>
-        <title>Săn Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi</title>
-        <meta name="description" content="Tổng hợp mã giảm giá Shopee, Lazada, Tiki mới nhất. Cập nhật liên tục, săn deal hời mỗi ngày cùng MuaNgayDi." />
+        <title>Mã giảm giá Shopee, Lazada, Tiki mới nhất | Mua ngay đi</title>
+        <meta name="description" content="Tổng hợp mã giảm giá Shopee 50K, voucher Lazada 400K và freeship Tiki mới nhất hôm nay. Hệ thống mã đã xác minh, tiết kiệm tối đa khi mua sắm online." />
+        <link rel="canonical" href={`${window.location.origin}/khuyen-mai`} />
       </Helmet>
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center">
@@ -172,6 +173,44 @@ export default function Coupons() {
                 <span className="w-6 h-6 rounded-full bg-brand-primary/20 text-brand-primary flex items-center justify-center font-bold shrink-0 text-xs">4</span>
                 <span>Để ý điều kiện "Giá trị đơn hàng tối thiểu" để áp mã thành công.</span>
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Section for Coupons */}
+        <div className="mt-20 pt-20 border-t border-white/5">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-display text-3xl font-black mb-12 uppercase tracking-tight text-center">Câu hỏi về mã giảm giá</h2>
+            <div className="space-y-6">
+              <details className="group glass border-white/10 rounded-2xl overflow-hidden p-6 hover:bg-white/5 transition-all cursor-pointer">
+                <summary className="text-white font-bold text-lg list-none flex justify-between items-center outline-none">
+                  Làm sao để lấy mã giảm giá Shopee?
+                  <span className="group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="mt-4 text-slate-400 leading-relaxed border-t border-white/5 pt-4">
+                  Để lấy mã giảm giá Shopee, bạn chỉ cần cuộn qua danh sách trên, tìm mã phù hợp với nhu cầu (như mã Freeship, mã hoàn xu hay mã giảm trực tiếp), sau đó nhấn "Sao chép mã". Bạn sẽ được copy code và có thể paste vào mục Voucher trên ứng dụng Shopee khi thanh toán.
+                </div>
+              </details>
+
+              <details className="group glass border-white/10 rounded-2xl overflow-hidden p-6 hover:bg-white/5 transition-all cursor-pointer">
+                <summary className="text-white font-bold text-lg list-none flex justify-between items-center outline-none">
+                  Mã giảm giá Tiki và Lazada có dùng được không?
+                  <span className="group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="mt-4 text-slate-400 leading-relaxed border-t border-white/5 pt-4">
+                  Có, chúng tôi tổng hợp đầy đủ mã giảm giá cho cả Tiki và Lazada. Riêng với Lazada, nhiều mã là mã thu thập (collectible), bạn nên nhấn vào nút liên kết để đến trang thu thập mã của Lazada trước khi mua sắm.
+                </div>
+              </details>
+
+              <details className="group glass border-white/10 rounded-2xl overflow-hidden p-6 hover:bg-white/5 transition-all cursor-pointer">
+                <summary className="text-white font-bold text-lg list-none flex justify-between items-center outline-none">
+                  Tại sao mã giảm giá không áp dụng được?
+                  <span className="group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="mt-4 text-slate-400 leading-relaxed border-t border-white/5 pt-4">
+                  Có một số lý do phổ biến: Mã đã hết số lượt sử dụng, đơn hàng của bạn không đạt giá trị tối thiểu, hoặc mã chỉ áp dụng cho một số ngành hàng/shop nhất định. Luôn kiểm tra kỹ "Điều kiện áp dụng" của mỗi voucher.
+                </div>
+              </details>
             </div>
           </div>
         </div>

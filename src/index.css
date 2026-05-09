@@ -12,6 +12,15 @@
   
   --radius-4xl: 2rem;
   --radius-5xl: 3rem;
+
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
 }
 
 @layer base {

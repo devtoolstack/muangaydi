@@ -8,9 +8,13 @@ import { useLocation, BrowserRouter as Router, Routes, Route } from 'react-route
 import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import BackToTop from './components/BackToTop';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import Coupons from './pages/Coupons';
+import TermsPage from './pages/Terms';
+import PrivacyPage from './pages/Privacy';
+import PolicyPage from './pages/Policy';
 import { ProductProvider } from './ProductContext';
 
 function ScrollToTop() {
@@ -41,9 +45,13 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/khuyen-mai" element={<Coupons />} />
+              <Route path="/dieu-khoan" element={<TermsPage />} />
+              <Route path="/bao-mat" element={<PrivacyPage />} />
+              <Route path="/chinh-sach" element={<PolicyPage />} />
             </Routes>
           </main>
           <Footer />
+          <BackToTop />
         </div>
       </Router>
     </ProductProvider>

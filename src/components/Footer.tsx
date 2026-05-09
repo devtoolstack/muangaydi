@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Mail, ArrowUpRight, ShieldCheck } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -32,10 +32,10 @@ export default function Footer() {
           <div>
             <h4 className="font-black mb-6 uppercase tracking-widest text-xs text-slate-500">Mua sắm</h4>
             <ul className="space-y-4 text-sm text-slate-400 font-medium">
-              <li><a href="#" className="hover:text-white transition-colors">Đồ điện tử</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Thiết kế gia dụng</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Thời trang nam/nữ</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Làm đẹp & Sức khỏe</a></li>
+              <li><a href="/?cat=Đồ điện tử" className="hover:text-white transition-colors">Đồ điện tử</a></li>
+              <li><a href="/?cat=Gia dụng" className="hover:text-white transition-colors">Thiết kế gia dụng</a></li>
+              <li><a href="/?cat=Thời trang" className="hover:text-white transition-colors">Thời trang nam/nữ</a></li>
+              <li><a href="/khuyen-mai" className="hover:text-white transition-colors">Mã giảm giá hot</a></li>
             </ul>
           </div>
 
@@ -65,19 +65,27 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-slate-500 text-xs font-medium">
-            © 2024 Mua ngay đi. Tất cả quyền được bảo lưu. Thiết kế bởi AI.
-          </p>
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col gap-2">
+            <p className="text-slate-500 text-xs font-medium">
+              © 2024 Mua ngay đi. Một sản phẩm tối ưu bởi AI cho cộng đồng săn deal Việt Nam.
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 text-[10px] text-slate-500">
+                <ShieldCheck size={12} className="text-green-500" /> Kết nối an toàn SSL
+              </div>
+              <div className="flex items-center gap-1 text-[10px] text-slate-500">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Đang trực tuyến
+              </div>
+            </div>
+          </div>
           <div className="flex gap-8 text-xs text-slate-500 font-bold uppercase tracking-widest">
-            <a href="#" className="hover:text-white">Privacy</a>
-            <a href="#" className="hover:text-white">Terms</a>
-            <a href="#" className="hover:text-white">Cookies</a>
+            <a href="/chinh-sach" className="hover:text-white transition-colors">Chính sách</a>
+            <a href="/dieu-khoan" className="hover:text-white transition-colors">Điều khoản</a>
+            <a href="/bao-mat" className="hover:text-white transition-colors">Bảo mật</a>
           </div>
         </div>
       </div>
     </footer>
   );
 }
-
-import { ArrowUpRight } from 'lucide-react';
