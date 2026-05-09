@@ -366,6 +366,14 @@ async function startServer() {
         <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
         <link rel="canonical" href="${fullUrl}" />
         <meta name="robots" content="index, follow" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XW9CBBBE96"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-XW9CBBBE96');
+        </script>
         ${jsonLd}
       `;
 

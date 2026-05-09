@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Ticket, Copy, CheckCircle2, Calendar, Users, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Coupon } from '../types';
 import { fetchCoupons } from '../services/sheetService';
@@ -42,7 +43,6 @@ export default function Coupons() {
       <Helmet>
         <title>Săn Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi</title>
         <meta name="description" content="Tổng hợp mã giảm giá Shopee, Lazada, Tiki mới nhất. Cập nhật liên tục, săn deal hời mỗi ngày cùng MuaNgayDi." />
-        <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
       </Helmet>
       <div className="max-w-4xl mx-auto">
         <div className="mb-12 text-center">

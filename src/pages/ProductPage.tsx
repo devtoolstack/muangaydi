@@ -49,7 +49,6 @@ export default function ProductPage() {
       <Helmet>
         <title>{product.name} | Mua ngay đi</title>
         <meta name="description" content={product.description.substring(0, 160)} />
-        <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
         <meta property="og:title" content={`${product.name} - Mua ngay đi`} />
         <meta property="og:description" content={product.description.substring(0, 160)} />
         <meta property="og:image" content={product.image} />
