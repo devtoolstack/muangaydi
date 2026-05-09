@@ -363,6 +363,7 @@ async function startServer() {
         <meta name="twitter:title" content="${title}" />
         <meta name="twitter:description" content="${description}" />
         <meta name="twitter:image" content="${encodedImage}" />
+        <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
         <link rel="canonical" href="${fullUrl}" />
         <meta name="robots" content="index, follow" />
         ${jsonLd}
