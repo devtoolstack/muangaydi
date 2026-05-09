@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://muangaydi.com/sitemap.xml
+Sitemap: https://muangaydi.com/sitemap_index.xml

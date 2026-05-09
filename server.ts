@@ -210,12 +210,12 @@ async function startServer() {
 
       // Handle robots.txt
       if (url === '/robots.txt') {
-        const robots = `User-agent: *\nAllow: /\nSitemap: ${protocol}://${host}/sitemap.xml`;
+        const robots = `User-agent: *\nAllow: /\nSitemap: ${domain}/sitemap.xml\nSitemap: ${domain}/sitemap_index.xml`;
         return res.status(200).set({ "Content-Type": "text/plain" }).end(robots);
       }
 
-      // Handle sitemap.xml
-      if (url === '/sitemap.xml') {
+      // Handle sitemap.xml and sitemap_index.xml
+      if (url === '/sitemap.xml' || url === '/sitemap_index.xml') {
         const rows = await fetchProducts();
         const lastMod = new Date().toISOString().split('T')[0];
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
