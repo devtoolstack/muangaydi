@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Hero from '../components/Hero';
 import HotDeals from '../components/HotDeals';
@@ -6,8 +6,10 @@ import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
 import { CATEGORIES } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Filter, Search, Tag } from 'lucide-react';
+import { Filter, Search, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProducts } from '../ProductContext';
+
+const ITEMS_PER_PAGE = 24;
 
 export default function HomePage() {
   const { 
@@ -22,6 +24,8 @@ export default function HomePage() {
     setSearchQuery,
     priceRanges
   } = useProducts();
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Helper to parse price string to number
   const parsePrice = (priceStr: string): number => {
@@ -60,6 +64,20 @@ export default function HomePage() {
 
     return matchesCategory && matchesSearch && matchesPrice;
   });
+
+  // Pagination logic
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedPriceRange, searchQuery]);
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 800, behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen">
@@ -156,12 +174,67 @@ export default function HomePage() {
             ))
           ) : (
             <AnimatePresence mode="popLayout">
-              {filteredProducts.map((product) => (
+              {paginatedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </AnimatePresence>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && !loading && (
+          <div className="mt-16 flex flex-wrap justify-center items-center gap-2 sm:gap-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all active:scale-95"
+              title="Trang trước"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const page = i + 1;
+                // Only show current, first, last, and pages around current
+                if (
+                  page === 1 || 
+                  page === totalPages || 
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-12 h-12 rounded-2xl font-black text-sm uppercase tracking-tight transition-all active:scale-90 border ${
+                        currentPage === page
+                          ? 'bg-white text-black border-white shadow-xl shadow-white/20'
+                          : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                } else if (
+                  page === currentPage - 2 || 
+                  page === currentPage + 2
+                ) {
+                  return <span key={page} className="text-slate-600 font-bold">...</span>;
+                }
+                return null;
+              })}
+            </div>
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all active:scale-95"
+              title="Trang sau"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        )}
 
         {filteredProducts.length === 0 && !loading && (
           <div className="text-center py-32 glass border-white/5 rounded-[40px] border-dashed">
