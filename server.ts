@@ -65,26 +65,26 @@ async function scrapeIPricedCoupons() {
       console.log(`[Scraper] Requesting: ${source.url}`);
       const { data: html } = await axios.get(source.url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
           'Accept-Language': 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7',
           'Referer': 'https://www.google.com/',
           'Cache-Control': 'no-cache'
         },
-        timeout: 12000
+        timeout: 15000
       });
 
       const $ = cheerio.load(html);
       
-      // iPrice often uses .coupon-item or nested div structures
-      const couponCards = $('div[data-coupon-id], article[class*="coupon"], .coupon-item, .z-a, .z-b');
+      // Selectors for Rehub theme used by iPrice
+      const couponCards = $('.woo_list_desc');
       
       console.log(`[Scraper] Found ${couponCards.length} candidates on ${source.store}`);
 
       couponCards.each((i, el) => {
-        const title = $(el).find('h3, h2, .t, .title').first().text().trim();
-        const description = $(el).find('.d, .description, p').first().text().trim();
-        const discountValue = $(el).find('span:contains("%"), span:contains("K"), span:contains("đ"), .v').first().text().trim();
+        const title = $(el).find('h2, h3, .font110').first().text().trim();
+        const description = $(el).find('.rh_custom_notice').first().text().trim() || $(el).find('p').first().text().trim();
+        const discountValue = $(el).find('.rh_custom_notice, .sale_letter').first().text().trim();
         
         if (!title || title.length < 5) return;
 
@@ -92,24 +92,19 @@ async function scrapeIPricedCoupons() {
         if (seenTitles.has(uniqueKey)) return;
         seenTitles.add(uniqueKey);
 
-        let code = $(el).attr('data-coupon-code') || '';
-        if (!code) {
-          const potentialCodes = $(el).find('span, div').filter((_, e) => {
-            const txt = $(e).text().trim();
-            return txt.length >= 4 && txt.length <= 12 && /^[A-Z0-9]+$/.test(txt);
-          });
-          code = potentialCodes.first().text().trim() || 'HOTDEAL';
-        }
+        // Many iPrice coupons are deals, not codes. Fallback to HOTDEAL or try to find mask/code
+        let code = $(el).closest('.re_aj_pag_auto_item').find('[data-code]').attr('data-code') || 
+                   $(el).closest('.re_aj_pag_auto_item').find('.coupon_value').text().trim() || 'HOTDEAL';
 
-        const expiry = $(el).find('span:contains("hạn"), .e').first().text().trim() || 'Hết hạn sớm';
+        const expiry = $(el).find('.listtimeleft').first().text().trim() || 'Hết hạn sớm';
 
         allCoupons.push({
           id: `scraped-${source.store}-${i}-${Date.now()}`,
           store: source.store,
           title: title,
-          code: code,
+          code: code.length > 20 ? 'HOTDEAL' : code, // Clean up long bogus codes
           description: description || `Mã giảm giá ${source.store} cực hời, lấy ngay tại MuaNgayDi.`,
-          expiryDate: expiry.replace('Hết hạn trong ', ''),
+          expiryDate: expiry.replace('Hết hạn trong ', '').replace('Last day', 'Sắp hết hạn'),
           copyCount: Math.floor(Math.random() * 5000) + 1000,
           isVerified: true,
           discountValue: discountValue || 'Ưu đãi',

@@ -9,6 +9,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
+import LoadingBar from './components/LoadingBar';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import Coupons from './pages/Coupons';
@@ -31,6 +32,7 @@ export default function App() {
       <ProductProvider>
         <Router>
           <ScrollToTop />
+          <LoadingBar />
           <div className="flex flex-col min-h-screen relative">
           {/* Mesh Background */}
           <div className="mesh-gradient">
