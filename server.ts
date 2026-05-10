@@ -205,13 +205,33 @@ async function startServer() {
 
       // Handle robots.txt
       if (url === '/robots.txt') {
-        const robots = `User-agent: *\nAllow: /\nSitemap: ${domain}/sitemap.xml\nSitemap: ${domain}/sitemap_index.xml`;
+        const robots = `User-agent: *
+Allow: /
+Sitemap: ${domain}/sitemap_index.xml
+Sitemap: ${domain}/sitemap_pages.xml
+Sitemap: ${domain}/sitemap_products.xml`;
         return res.status(200).set({ "Content-Type": "text/plain" }).end(robots);
       }
 
-      // Handle sitemap.xml and sitemap_index.xml
-      if (url === '/sitemap.xml' || url === '/sitemap_index.xml') {
-        const rows = await fetchProducts();
+      // Handle sitemap index
+      if (url === '/sitemap_index.xml') {
+        const lastMod = new Date().toISOString().split('T')[0];
+        let sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${domain}/sitemap_pages.xml</loc>
+    <lastmod>${lastMod}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${domain}/sitemap_products.xml</loc>
+    <lastmod>${lastMod}</lastmod>
+  </sitemap>
+</sitemapindex>`;
+        return res.status(200).set({ "Content-Type": "application/xml" }).end(sitemapIndex);
+      }
+
+      // Handle individual sitemaps
+      if (url === '/sitemap_pages.xml') {
         const lastMod = new Date().toISOString().split('T')[0];
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
         sitemap += `  <url>\n    <loc>${domain}/</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
@@ -219,6 +239,14 @@ async function startServer() {
         sitemap += `  <url>\n    <loc>${domain}/dieu-khoan</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
         sitemap += `  <url>\n    <loc>${domain}/bao-mat</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
         sitemap += `  <url>\n    <loc>${domain}/chinh-sach</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
+        sitemap += `</urlset>`;
+        return res.status(200).set({ "Content-Type": "application/xml" }).end(sitemap);
+      }
+
+      if (url === '/sitemap.xml' || url === '/sitemap_products.xml') {
+        const rows = await fetchProducts();
+        const lastMod = new Date().toISOString().split('T')[0];
+        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
         
         rows.forEach(row => {
           if (row['Tên sản phẩm']) {
@@ -321,21 +349,35 @@ async function startServer() {
             "name": pName,
             "image": [image],
             "description": pDesc,
-            "brand": { "@type": "Brand", "name": "Mua ngay đi" },
+            "brand": { "@type": "Brand", "name": product['Thương hiệu'] || "Mua ngay đi" },
             "sku": productId,
+            "mpn": productId,
+            "category": product['Danh mục'],
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": fullUrl
+            },
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": ratingValue,
-              "reviewCount": reviewCount
+              "reviewCount": reviewCount,
+              "bestRating": "5",
+              "worstRating": "1"
             },
             "offers": {
               "@type": "Offer",
               "url": fullUrl,
               "priceCurrency": "VND",
               "price": pPrice,
+              "priceValidUntil": "2026-12-31",
               "itemCondition": "https://schema.org/NewCondition",
               "availability": "https://schema.org/InStock",
-              "seller": { "@type": "Organization", "name": "Mua ngay đi" }
+              "seller": { "@type": "Organization", "name": "Mua ngay đi" },
+              "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "VN",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnPeriod"
+              }
             }
           };
 
@@ -432,7 +474,12 @@ async function startServer() {
         <meta name="twitter:title" content="${title}" />
         <meta name="twitter:description" content="${description}" />
         <meta name="twitter:image" content="${encodedImage}" />
+        <meta name="keywords" content="mã giảm giá shopee, mã giảm giá lazada, săn deal hời, voucher shopee, voucher lazada, mua sắm tiết kiệm, deal hot hôm nay, muangaydi" />
         <meta name="google-site-verification" content="NTrEYgh3qUCVaJTXYMOIc0uk7A3b48PxayCvFuOoeDQ" />
+        <meta name="geo.region" content="VN" />
+        <meta name="geo.placename" content="Vietnam" />
+        <meta name="geo.position" content="14.058324;108.277199" />
+        <meta name="ICBM" content="14.058324, 108.277199" />
         <link rel="canonical" href="${fullUrl}" />
         <meta name="robots" content="index, follow" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

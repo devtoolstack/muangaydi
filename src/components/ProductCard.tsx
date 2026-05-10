@@ -133,6 +133,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={product.image} 
           alt={`${product.name} - Deal hời giá rẻ tại Mua ngay đi`} 
           loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
           referrerPolicy="no-referrer"
         />
