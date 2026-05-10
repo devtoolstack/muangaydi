@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Hero from '../components/Hero';
+import HotDeals from '../components/HotDeals';
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
 import { CATEGORIES } from '../types';
@@ -8,19 +9,19 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Filter, Search, Tag } from 'lucide-react';
 import { useProducts } from '../ProductContext';
 
-const PRICE_RANGES = [
-  { label: "Tất cả giá", min: 0, max: Infinity },
-  { label: "Dưới 100k", min: 0, max: 100000 },
-  { label: "100k - 500k", min: 100000, max: 500000 },
-  { label: "500k - 2Tr", min: 500000, max: 2000000 },
-  { label: "Trên 2Tr", min: 2000000, max: Infinity },
-];
-
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
-  const [selectedPriceRange, setSelectedPriceRange] = useState(PRICE_RANGES[0]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const { products, loading, error } = useProducts();
+  const { 
+    products, 
+    loading, 
+    error,
+    selectedCategory,
+    setSelectedCategory,
+    selectedPriceRange,
+    setSelectedPriceRange,
+    searchQuery,
+    setSearchQuery,
+    priceRanges
+  } = useProducts();
 
   // Helper to parse price string to number
   const parsePrice = (priceStr: string): number => {
@@ -78,12 +79,14 @@ export default function HomePage() {
         featuredProduct={featuredProduct} 
       />
       
+      <HotDeals products={products} />
+      
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         {/* Category Header & Search */}
         <div className="flex flex-col gap-8 sm:gap-12 mb-12 sm:mb-16">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8">
             <div className="max-w-2xl">
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-4 uppercase tracking-tight">Gợi ý dành cho bạn</h2>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-4 uppercase tracking-tight">Khám Phá Deal Hời</h2>
               <p className="text-slate-400 text-base sm:text-lg">
                 {loading ? "Đang cập nhật sản phẩm..." : `Tìm thấy ${filteredProducts.length} sản phẩm tương ứng`}
               </p>
@@ -122,7 +125,7 @@ export default function HomePage() {
               <div className="flex-shrink-0 flex items-center gap-2 mr-2 text-slate-500 font-bold uppercase text-[10px] tracking-widest border-r border-white/10 pr-4">
                 <Tag size={14} /> Khoảng giá:
               </div>
-              {PRICE_RANGES.map((range) => (
+              {priceRanges.map((range) => (
                 <button
                   key={range.label}
                   onClick={() => setSelectedPriceRange(range)}
@@ -171,7 +174,7 @@ export default function HomePage() {
               <button 
                 onClick={() => {
                   setSelectedCategory("Tất cả");
-                  setSelectedPriceRange(PRICE_RANGES[0]);
+                  setSelectedPriceRange(priceRanges[0]);
                   setSearchQuery("");
                 }}
                 className="bg-white text-black px-8 py-3 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95"

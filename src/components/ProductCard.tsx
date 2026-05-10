@@ -20,6 +20,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       {/* Badge items */}
       <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+        {product.isHot && (
+          <span className="px-3 py-1 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[10px] font-black uppercase rounded-lg shadow-lg flex items-center gap-1">
+            🔥 HOT
+          </span>
+        )}
         {product.status && (
           <span className={`px-3 py-1 text-white text-[10px] font-black uppercase rounded-lg shadow-lg ${
             product.status.toLowerCase().includes('hết') ? 'bg-slate-600' : 'bg-red-500'

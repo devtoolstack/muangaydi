@@ -10,7 +10,14 @@ export default function Navbar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<Product[]>([]);
-  const { categories, products } = useProducts();
+  const { 
+    categories, 
+    products, 
+    setSelectedCategory, 
+    setSearchQuery,
+    priceRanges,
+    setSelectedPriceRange
+  } = useProducts();
   const navigate = useNavigate();
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
@@ -58,7 +65,10 @@ export default function Navbar() {
     // For now, search matches product name directly if possible, or just clear
     const match = products.find(p => p.name.toLowerCase() === term.toLowerCase());
     if (match) {
-      navigate(`/product/${match.id}`);
+      navigate(`/${match.id}`);
+    } else {
+      setSearchQuery(term);
+      navigate('/');
     }
     
     setSearchTerm('');
@@ -134,7 +144,7 @@ export default function Navbar() {
                     {suggestions.map((product) => (
                       <Link
                         key={product.id}
-                        to={`/product/${product.id}`}
+                        to={`/${product.id}`}
                         onClick={() => {
                           setShowSuggestions(false);
                           setSearchTerm('');
@@ -173,13 +183,18 @@ export default function Navbar() {
               <div className="absolute top-full right-0 pt-2 w-48 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200">
                 <div className="bg-brand-dark/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl p-2">
                   {categories.map((cat) => (
-                    <Link 
+                    <button 
                       key={cat} 
-                      to="/"
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setSelectedPriceRange(priceRanges[0]);
+                        setSearchQuery("");
+                        navigate("/");
+                      }}
                       className="block w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-colors"
                     >
                       {cat}
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -213,7 +228,7 @@ export default function Navbar() {
                 {suggestions.map((product) => (
                   <Link
                     key={product.id}
-                    to={`/product/${product.id}`}
+                    to={`/${product.id}`}
                     onClick={() => {
                       setIsOpen(false);
                       setSearchTerm('');
@@ -234,7 +249,17 @@ export default function Navbar() {
             <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 ml-2 mb-4">Danh mục sản phẩm</p>
             <div className="grid grid-cols-1 gap-2">
               {categories.map((cat) => (
-                <button key={cat} className="w-full px-4 py-3 text-sm bg-white/5 border border-white/5 rounded-xl text-left text-white font-bold hover:bg-brand-primary/20 transition-all flex items-center justify-between group">
+                <button 
+                  key={cat} 
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setSelectedPriceRange(priceRanges[0]);
+                    setSearchQuery("");
+                    setIsOpen(false);
+                    navigate("/");
+                  }}
+                  className="w-full px-4 py-3 text-sm bg-white/5 border border-white/5 rounded-xl text-left text-white font-bold hover:bg-brand-primary/20 transition-all flex items-center justify-between group"
+                >
                   {cat}
                   <ChevronDown className="-rotate-90 text-slate-500 group-hover:text-white transition-colors" size={16} />
                 </button>
