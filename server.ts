@@ -271,7 +271,7 @@ Sitemap: ${domain}/sitemap_products.xml`;
       // Default SEO values
       let title = "Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày";
       let description = "Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ, chốt đơn ngay không cần lo giá!";
-      let image = "https://og-image.vercel.app/%3Cb%3EMUA%20NGAY%20%C4%90I%3C%2Fb%3E.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg&images=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1607082348824-0a96f2a4b9da%3Fq%3D80%26w%3D200%26auto%3Dformat%26fit%3Dcrop";
+      let image = "https://og-image.vercel.app/**MUA%20NGAY%20%C4%90I**.png?theme=dark&md=1&fontSize=125px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg";
       
       const orgSchema = {
         "@context": "https://schema.org",
@@ -390,6 +390,7 @@ Sitemap: ${domain}/sitemap_products.xml`;
       } else if (url === '/khuyen-mai') {
         title = "Tổng Hợp Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi";
         description = "Lấy ngay mã giảm giá Shopee 50K, voucher Lazada 400K và freeship Tiki mới nhất hôm nay. Tiết kiệm tối đa khi mua sắm online.";
+        image = "https://og-image.vercel.app/M%C3%83%20GI%E1%BA%A2M%20GI%C3%81%0A**MUA%20NGAY%20%C4%90I**.png?theme=dark&md=1&fontSize=100px";
         
         const faqSchema = {
           "@context": "https://schema.org",
@@ -427,11 +428,8 @@ Sitemap: ${domain}/sitemap_products.xml`;
           <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
         `;
       } else {
-        // Home page or other, pick the best product for image
-        const rows = await fetchProducts();
-        if (rows.length > 0) {
-          image = (rows[0]['Ảnh'] || image).trim();
-        }
+        // Home page or other, pick the best branded image
+        image = "https://og-image.vercel.app/**MUA%20NGAY%20%C4%90I**.png?theme=dark&md=1&fontSize=125px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg";
       }
 
       // Ensure image URL is properly encoded and absolute

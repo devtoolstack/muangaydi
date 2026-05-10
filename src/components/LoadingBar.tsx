@@ -24,16 +24,36 @@ export default function LoadingBar() {
     <AnimatePresence>
       {isActive && (
         <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ 
-            scaleX: { duration: 1.5, ease: "easeOut" },
-            opacity: { duration: 0.2 }
+          initial={{ width: "0%", opacity: 0, height: "2px" }}
+          animate={{ 
+            width: "100%", 
+            opacity: 1,
+            height: ["2px", "4px", "3px"],
           }}
-          style={{ originX: 0 }}
-          className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-primary z-[9999]"
-        />
+          exit={{ opacity: 0, height: "0px" }}
+          transition={{ 
+            width: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+            opacity: { duration: 0.3 },
+            height: { duration: 0.6, times: [0, 0.7, 1] }
+          }}
+          className="fixed top-0 left-0 z-[9999] overflow-hidden"
+          style={{ width: "100%" }}
+        >
+          <motion.div 
+            className="w-full h-full bg-gradient-to-r from-brand-primary via-white to-brand-primary bg-[length:200%_100%]"
+            animate={{ 
+              backgroundPosition: ["0% 0%", "200% 0%"] 
+            }}
+            transition={{ 
+              repeat: Infinity, 
+              duration: 1.5, 
+              ease: "linear" 
+            }}
+            style={{ 
+              boxShadow: "0 0 10px rgba(255, 56, 92, 0.5), 0 0 20px rgba(255, 56, 92, 0.3)" 
+            }}
+          />
+        </motion.div>
       )}
     </AnimatePresence>
   );

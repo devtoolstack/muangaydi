@@ -85,7 +85,7 @@ export default function ProductPage() {
           <span className="shrink-0">/</span>
           <span className="shrink-0">{product.category}</span>
           <span className="shrink-0">/</span>
-          <span className="text-brand-dark font-medium truncate">{product.name}</span>
+          <span className="text-white font-bold truncate">{product.name}</span>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 mb-16 sm:mb-20">
