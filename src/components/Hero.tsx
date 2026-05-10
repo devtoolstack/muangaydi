@@ -79,6 +79,16 @@ export default function Hero({ productImage, featuredProduct }: HeroProps) {
                 className="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-110"
                 referrerPolicy="no-referrer"
               />
+              
+              {/* Brand Text Overlay */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                <div className="bg-black/40 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl transform -rotate-6 group-hover:rotate-0 transition-transform duration-500">
+                  <span className="text-white font-black text-2xl sm:text-4xl tracking-tighter drop-shadow-2xl whitespace-nowrap">
+                    MUA NGAY ĐI
+                  </span>
+                </div>
+              </div>
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6 sm:p-8">
                 <p className="text-white font-bold uppercase tracking-widest text-xs sm:text-sm">Xem chi tiết sản phẩm</p>
               </div>
