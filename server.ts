@@ -271,7 +271,7 @@ Sitemap: ${domain}/sitemap_products.xml`;
       // Default SEO values
       let title = "Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày";
       let description = "Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ, chốt đơn ngay không cần lo giá!";
-      let image = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1200&auto=format&fit=crop";
+      let image = "https://og-image.vercel.app/%3Cb%3EMUA%20NGAY%20%C4%90I%3C%2Fb%3E.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg&images=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1607082348824-0a96f2a4b9da%3Fq%3D80%26w%3D200%26auto%3Dformat%26fit%3Dcrop";
       
       const orgSchema = {
         "@context": "https://schema.org",
