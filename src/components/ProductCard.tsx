@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, ArrowUpRight, Heart } from 'lucide-react';
+import { Star, ArrowUpRight, Heart, Facebook, Twitter, Instagram, AtSign, MessageCircle, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Product } from '../types';
@@ -10,6 +10,32 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const shareUrl = product.productUrl;
+  const shareTitle = product.name;
+  const shareText = `Check out this deal: ${product.name}`;
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error sharing:', error);
+        }
+      }
+    }
+  };
+
+  const encodedUrl = encodeURIComponent(shareUrl);
+  const encodedText = encodeURIComponent(shareText);
+
   return (
     <motion.div 
       layout
@@ -37,9 +63,69 @@ export default function ProductCard({ product }: ProductCardProps) {
         </span>
       </div>
 
-      <button className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white/50 hover:text-red-500 hover:scale-110 transition-all border border-white/10 shadow-sm">
-        <Heart size={18} />
-      </button>
+      <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
+        <button 
+          className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white/50 hover:text-red-500 hover:scale-110 transition-all border border-white/10 shadow-sm"
+          title="Yêu thích"
+        >
+          <Heart size={18} />
+        </button>
+        
+        {/* Share Button Group */}
+        <div className="relative group/share">
+          <button 
+            onClick={handleShare}
+            className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white/50 hover:text-brand-primary hover:scale-110 transition-all border border-white/10 shadow-sm md:group-hover/share:opacity-0"
+            title="Chia sẻ"
+          >
+            <Share2 size={18} />
+          </button>
+
+          {/* Social List - Hidden on small screens if navigator.share exists, shown on hover for desktop */}
+          <div className="absolute top-0 right-0 flex flex-col gap-2 opacity-0 pointer-events-none md:group-hover/share:opacity-100 md:group-hover/share:pointer-events-auto transition-all translate-x-4 md:group-hover/share:translate-x-0 duration-300">
+            <a 
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Chia sẻ Facebook"
+              className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-white hover:bg-blue-600 hover:scale-110 transition-all border border-white/20 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Facebook size={16} fill="currentColor" />
+            </a>
+            <a 
+              href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Chia sẻ Twitter"
+              className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-white hover:bg-sky-500 hover:scale-110 transition-all border border-white/20 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Twitter size={16} fill="currentColor" />
+            </a>
+            <a 
+              href={`https://sp.zalo.me/share/base?url=${encodedUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Chia sẻ Zalo"
+              className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-white hover:bg-[#0068ff] hover:scale-110 transition-all border border-white/20 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MessageCircle size={16} fill="currentColor" />
+            </a>
+            <a 
+              href={`https://www.threads.net/intent/post?text=${encodedText}%20${encodedUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Chia sẻ Threads"
+              className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-white hover:bg-black hover:scale-110 transition-all border border-white/20 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <AtSign size={16} />
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* Image section */}
       <Link to={`/${product.id}`} className="block relative aspect-[4/3] overflow-hidden m-4 rounded-2xl border border-white/5 bg-slate-900">
