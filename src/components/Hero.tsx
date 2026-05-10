@@ -74,7 +74,7 @@ export default function Hero({ productImage, featuredProduct }: HeroProps) {
               className="relative z-10 block rounded-[40px] sm:rounded-5xl overflow-hidden glass shadow-2xl shadow-brand-primary/10 rotate-3 transition-transform hover:rotate-0 duration-500 border border-white/20 group"
             >
               <img 
-                src={productImage || "https://images.unsplash.com/photo-1542491509-3001e1e1199a?q=80&w=1000&auto=format&fit=crop"} 
+                src={productImage || "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1000&auto=format&fit=crop"} 
                 alt="Shopping Trend" 
                 className="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-110"
                 referrerPolicy="no-referrer"
