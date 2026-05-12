@@ -85,7 +85,7 @@ export default function ProductPage() {
           <span className="shrink-0">/</span>
           <span className="shrink-0">{product.category}</span>
           <span className="shrink-0">/</span>
-          <span className="text-white font-bold truncate">{product.name}</span>
+          <span className="text-brand-primary font-black truncate drop-shadow-sm">{product.name}</span>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 mb-16 sm:mb-20">
@@ -101,7 +101,7 @@ export default function ProductPage() {
                 alt={`${product.name} - Hình ảnh sản phẩm chi tiết`} 
                 loading="lazy"
                 className="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105"
-                referrerPolicy="no-referrer"
+                referrerPolicy="strict-origin-when-cross-origin"
               />
             </div>
           </motion.div>
@@ -164,7 +164,7 @@ export default function ProductPage() {
                 <a 
                   href={product.productUrl}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                   className="flex-1 bg-gradient-to-r from-brand-primary to-brand-secondary text-white py-4 sm:py-6 rounded-2xl sm:rounded-3xl font-black text-base sm:text-xl flex items-center justify-center gap-2 sm:gap-3 hover:scale-[1.02] transition-all active:scale-[0.98] shadow-2xl shadow-brand-primary/30 uppercase tracking-tighter"
                 >
                   SĂN DEAL NGAY <ShoppingBag size={20} className="sm:w-[24px] sm:h-[24px]" />
@@ -215,7 +215,7 @@ export default function ProductPage() {
             <a 
               href={product.productUrl}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="flex-1 bg-brand-primary text-black py-4 px-6 rounded-2xl font-black text-sm text-center uppercase tracking-tight shadow-lg"
             >
               CHỐT DEAL NGAY

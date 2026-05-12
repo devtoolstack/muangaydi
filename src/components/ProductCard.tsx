@@ -135,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-          referrerPolicy="no-referrer"
+          referrerPolicy="strict-origin-when-cross-origin"
         />
       </Link>
 
@@ -168,7 +168,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <a 
             href={product.productUrl} 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="noopener"
             className="w-full bg-white text-black group-hover:bg-brand-primary group-hover:text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xl uppercase tracking-tighter text-[11px] sm:text-sm"
             onClick={(e) => e.stopPropagation()}
           >
