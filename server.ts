@@ -201,16 +201,15 @@ async function startServer() {
     }));
   }
 
-  app.get('*', async (req, res) => {
+  // Robots.txt, Sitemaps, and RSS Feed routes
+  app.get(['/robots.txt', '/sitemap.xml', '/sitemap_index.xml', '/sitemap_pages.xml', '/sitemap_products.xml', '/rss.xml', '/feed.xml'], async (req, res) => {
     try {
-      const url = req.originalUrl;
+      const urlPath = req.path;
       const protocol = req.get('x-forwarded-proto') || 'https';
       const host = req.get('host');
       const domain = `${protocol}://${host}`;
-      const fullUrl = `${domain}${url}`;
 
-      // Handle robots.txt
-      if (url === '/robots.txt') {
+      if (urlPath === '/robots.txt') {
         const robots = `User-agent: *
 Allow: /
 Sitemap: ${domain}/sitemap.xml
@@ -219,9 +218,9 @@ Sitemap: ${domain}/feed.xml`;
         return res.status(200).set({ "Content-Type": "text/plain; charset=utf-8" }).end(robots);
       }
 
-      // Handle sitemap index
-      if (url === '/sitemap_index.xml' || url === '/sitemap.xml') {
-        const lastMod = new Date().toISOString().split('T')[0];
+      const lastMod = new Date().toISOString().split('T')[0];
+
+      if (urlPath === '/sitemap_index.xml' || urlPath === '/sitemap.xml') {
         const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
@@ -236,9 +235,7 @@ Sitemap: ${domain}/feed.xml`;
         return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(sitemapIndex.trim());
       }
 
-      // Handle individual sitemaps
-      if (url === '/sitemap_pages.xml') {
-        const lastMod = new Date().toISOString().split('T')[0];
+      if (urlPath === '/sitemap_pages.xml') {
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -275,9 +272,8 @@ Sitemap: ${domain}/feed.xml`;
         return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(sitemap.trim());
       }
 
-      if (url === '/sitemap_products.xml') {
+      if (urlPath === '/sitemap_products.xml') {
         const rows = await fetchProducts();
-        const lastMod = new Date().toISOString().split('T')[0];
         let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
         
@@ -298,10 +294,9 @@ Sitemap: ${domain}/feed.xml`;
         return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(sitemap.trim());
       }
 
-      // Handle RSS Feed for faster indexing
-      if (url === '/rss.xml' || url === '/feed.xml') {
+      if (urlPath === '/rss.xml' || urlPath === '/feed.xml') {
         const rows = await fetchProducts();
-        const lastMod = new Date().toUTCString();
+        const lastModUTC = new Date().toUTCString();
         let rss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
@@ -309,7 +304,7 @@ Sitemap: ${domain}/feed.xml`;
   <link>${domain}</link>
   <description>Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ.</description>
   <language>vi</language>
-  <lastBuildDate>${lastMod}</lastBuildDate>
+  <lastBuildDate>${lastModUTC}</lastBuildDate>
   <atom:link href="${domain}/rss.xml" rel="self" type="application/rss+xml" />`;
 
         rows.slice(0, 50).forEach(row => {
@@ -323,14 +318,28 @@ Sitemap: ${domain}/feed.xml`;
     <link>${fullProdUrl}</link>
     <guid>${fullProdUrl}</guid>
     <description>${desc}</description>
-    <pubDate>${lastMod}</pubDate>
+    <pubDate>${lastModUTC}</pubDate>
   </item>`;
           }
         });
 
         rss += `</channel></rss>`;
-        return res.status(200).set({ "Content-Type": "application/xml" }).end(rss);
+        return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(rss);
       }
+    } catch (e) {
+      console.error('[Sitemap Error]', e);
+      res.status(500).end('Internal Server Error');
+    }
+  });
+
+  app.get('*', async (req, res) => {
+    try {
+      const url = req.originalUrl;
+      const pathOnly = req.path;
+      const protocol = req.get('x-forwarded-proto') || 'https';
+      const host = req.get('host');
+      const domain = `${protocol}://${host}`;
+      const fullUrl = `${domain}${url}`;
 
       let template: string;
       
