@@ -17,16 +17,22 @@ const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVGYFkgGz1rM
 
 async function fetchProducts() {
   try {
-    const response = await fetch(SHEET_URL);
+    const response = await fetch(SHEET_URL, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const csvData = await response.text();
     return new Promise<any[]>((resolve) => {
       Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true,
         complete: (results) => resolve(results.data),
+        error: (err) => {
+          console.error('[PapaParse Error]', err);
+          resolve([]);
+        }
       });
     });
-  } catch (e) {
+  } catch (e: any) {
+    console.error('[FetchProducts Error]', e.message);
     return [];
   }
 }
@@ -207,16 +213,16 @@ async function startServer() {
       if (url === '/robots.txt') {
         const robots = `User-agent: *
 Allow: /
-Sitemap: ${domain}/sitemap_index.xml
-Sitemap: ${domain}/sitemap_pages.xml
-Sitemap: ${domain}/sitemap_products.xml`;
-        return res.status(200).set({ "Content-Type": "text/plain" }).end(robots);
+Sitemap: ${domain}/sitemap.xml
+# Speed up indexing
+Sitemap: ${domain}/feed.xml`;
+        return res.status(200).set({ "Content-Type": "text/plain; charset=utf-8" }).end(robots);
       }
 
       // Handle sitemap index
-      if (url === '/sitemap_index.xml') {
+      if (url === '/sitemap_index.xml' || url === '/sitemap.xml') {
         const lastMod = new Date().toISOString().split('T')[0];
-        let sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+        const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>${domain}/sitemap_pages.xml</loc>
@@ -227,36 +233,103 @@ Sitemap: ${domain}/sitemap_products.xml`;
     <lastmod>${lastMod}</lastmod>
   </sitemap>
 </sitemapindex>`;
-        return res.status(200).set({ "Content-Type": "application/xml" }).end(sitemapIndex);
+        return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(sitemapIndex.trim());
       }
 
       // Handle individual sitemaps
       if (url === '/sitemap_pages.xml') {
         const lastMod = new Date().toISOString().split('T')[0];
-        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-        sitemap += `  <url>\n    <loc>${domain}/</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
-        sitemap += `  <url>\n    <loc>${domain}/khuyen-mai</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
-        sitemap += `  <url>\n    <loc>${domain}/dieu-khoan</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
-        sitemap += `  <url>\n    <loc>${domain}/bao-mat</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
-        sitemap += `  <url>\n    <loc>${domain}/chinh-sach</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n`;
-        sitemap += `</urlset>`;
-        return res.status(200).set({ "Content-Type": "application/xml" }).end(sitemap);
+        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${domain}/</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${domain}/khuyen-mai</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${domain}/dieu-khoan</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>${domain}/bao-mat</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>${domain}/chinh-sach</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>`;
+        return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(sitemap.trim());
       }
 
-      if (url === '/sitemap.xml' || url === '/sitemap_products.xml') {
+      if (url === '/sitemap_products.xml') {
         const rows = await fetchProducts();
         const lastMod = new Date().toISOString().split('T')[0];
-        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
         
         rows.forEach(row => {
           if (row['Tên sản phẩm']) {
             const slug = slugify(row['Tên sản phẩm'].toString());
-            sitemap += `  <url>\n    <loc>${domain}/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+            sitemap += `
+  <url>
+    <loc>${domain}/${slug}</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>`;
           }
         });
         
-        sitemap += `</urlset>`;
-        return res.status(200).set({ "Content-Type": "application/xml" }).end(sitemap);
+        sitemap += `\n</urlset>`;
+        return res.status(200).set({ "Content-Type": "application/xml; charset=utf-8" }).end(sitemap.trim());
+      }
+
+      // Handle RSS Feed for faster indexing
+      if (url === '/rss.xml' || url === '/feed.xml') {
+        const rows = await fetchProducts();
+        const lastMod = new Date().toUTCString();
+        let rss = `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày</title>
+  <link>${domain}</link>
+  <description>Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ.</description>
+  <language>vi</language>
+  <lastBuildDate>${lastMod}</lastBuildDate>
+  <atom:link href="${domain}/rss.xml" rel="self" type="application/rss+xml" />`;
+
+        rows.slice(0, 50).forEach(row => {
+          if (row['Tên sản phẩm']) {
+            const slug = slugify(row['Tên sản phẩm'].toString());
+            const fullProdUrl = `${domain}/${slug}`;
+            const desc = (row['Mô tả'] || '').substring(0, 200).replace(/[<>]/g, '');
+            rss += `
+  <item>
+    <title>${row['Tên sản phẩm'].replace(/&/g, '&amp;')}</title>
+    <link>${fullProdUrl}</link>
+    <guid>${fullProdUrl}</guid>
+    <description>${desc}</description>
+    <pubDate>${lastMod}</pubDate>
+  </item>`;
+          }
+        });
+
+        rss += `</channel></rss>`;
+        return res.status(200).set({ "Content-Type": "application/xml" }).end(rss);
       }
 
       let template: string;
@@ -479,7 +552,8 @@ Sitemap: ${domain}/sitemap_products.xml`;
         <meta name="geo.position" content="14.058324;108.277199" />
         <meta name="ICBM" content="14.058324, 108.277199" />
         <link rel="canonical" href="${fullUrl}" />
-        <meta name="robots" content="index, follow" />
+        <link rel="alternate" type="application/rss+xml" title="Mua ngay đi RSS Feed" href="${domain}/rss.xml" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
         <link rel="preconnect" href="https://images.unsplash.com" />

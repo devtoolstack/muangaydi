@@ -79,7 +79,9 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="flex gap-8 text-xs text-slate-500 font-bold uppercase tracking-widest">
+          <div className="flex gap-8 text-xs text-slate-500 font-bold uppercase tracking-widest flex-wrap justify-center md:justify-end">
+            <a href="/sitemap_index.xml" className="hover:text-white transition-colors">Sitemap</a>
+            <a href="/rss.xml" className="hover:text-white transition-colors">RSS Feed</a>
             <a href="/chinh-sach" className="hover:text-white transition-colors">Chính sách</a>
             <a href="/dieu-khoan" className="hover:text-white transition-colors">Điều khoản</a>
             <a href="/bao-mat" className="hover:text-white transition-colors">Bảo mật</a>
