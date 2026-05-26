@@ -16,6 +16,9 @@ import Coupons from './pages/Coupons';
 import TermsPage from './pages/Terms';
 import PrivacyPage from './pages/Privacy';
 import PolicyPage from './pages/Policy';
+import SheetEmbed from './pages/SheetEmbed';
+import BlogList from './pages/BlogList';
+import BlogPost from './pages/BlogPost';
 import { ProductProvider } from './ProductContext';
 
 function ScrollToTop() {
@@ -46,9 +49,12 @@ export default function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/khuyen-mai" element={<Coupons />} />
+              <Route path="/cam-nang" element={<BlogList />} />
+              <Route path="/cam-nang/:id" element={<BlogPost />} />
               <Route path="/dieu-khoan" element={<TermsPage />} />
               <Route path="/bao-mat" element={<PrivacyPage />} />
               <Route path="/chinh-sach" element={<PolicyPage />} />
+              <Route path="/sheet" element={<SheetEmbed />} />
               <Route path="/:id" element={<ProductPage />} />
             </Routes>
           </main>

@@ -6,8 +6,10 @@ import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
 import { CATEGORIES } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Filter, Search, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Filter, Search, Tag, ChevronLeft, ChevronRight, BookOpen, ArrowRight, Clock, Calendar, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import { useProducts } from '../ProductContext';
+import { BLOG_POSTS } from '../data/blogData';
+import { Link } from 'react-router-dom';
 
 const ITEMS_PER_PAGE = 24;
 
@@ -257,6 +259,75 @@ export default function HomePage() {
             </div>
           </div>
         )}
+
+        {/* Cẩm Nang Mua Sắm Nổi Bật Section to satisfy AdSense crawl bot with extremely rich text content */}
+        <div className="mt-24 pt-16 border-t border-white/5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
+            <div>
+              <h2 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-tight flex items-center gap-3">
+                <span className="p-2 bg-brand-primary/10 text-brand-primary rounded-xl border border-brand-primary/20">
+                  <BookOpen size={20} />
+                </span>
+                Cẩm nang mua sắm nổi bật
+              </h2>
+              <p className="text-slate-400 text-sm sm:text-base mt-2">Bí quyết săn voucher, lập kế hoạch chi tiêu thông thái và kinh nghiệm tránh lừa đảo của các tín đồ mua sắm</p>
+            </div>
+            <Link 
+              to="/cam-nang" 
+              className="inline-flex items-center gap-2 text-sm text-brand-primary font-bold uppercase tracking-wider hover:underline hover:translate-x-1 transition-all shrink-0"
+            >
+              Xem tất cả cẩm nang <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {BLOG_POSTS.slice(0, 3).map((post) => (
+              <div 
+                key={post.id} 
+                className="group flex flex-col glass border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] rounded-3xl overflow-hidden p-5 transition-all duration-300"
+              >
+                <div className="aspect-video w-full rounded-2xl overflow-hidden mb-5 relative">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-3 left-3 bg-black/80 backdrop-blur-md text-[10px] font-black uppercase text-brand-primary px-2.5 py-1 rounded-lg border border-brand-primary/20">
+                    {post.category}
+                  </span>
+                </div>
+                
+                <div className="flex-grow flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2">
+                      <span className="flex items-center gap-1"><Calendar size={10} /> {post.publishedAt}</span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1"><Clock size={10} /> {post.readTime}</span>
+                    </div>
+                    
+                    <h3 className="text-base font-bold text-white uppercase tracking-tight group-hover:text-brand-primary transition-colors line-clamp-2 leading-snug mb-2">
+                      <Link to={`/cam-nang/${post.slug}`}>
+                        {post.title}
+                      </Link>
+                    </h3>
+                    
+                    <p className="text-slate-400 text-xs leading-relaxed mb-5 line-clamp-3">
+                      {post.description}
+                    </p>
+                  </div>
+                  
+                  <Link 
+                    to={`/cam-nang/${post.slug}`} 
+                    className="inline-flex items-center gap-1 text-xs text-brand-primary font-bold uppercase tracking-wider self-start group-hover:translate-x-1 transition-transform"
+                  >
+                    Xem chi tiết <ChevronRightIcon size={14} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* FAQ Section for GEO/SEO */}
         <div className="mt-32 pt-20 border-t border-white/5">

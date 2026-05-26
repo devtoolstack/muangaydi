@@ -8,6 +8,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import compression from 'compression';
 import { slugify } from "./src/lib/utils";
+import { BLOG_POSTS } from "./src/data/blogData";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -251,6 +252,42 @@ Sitemap: ${domain}/feed.xml`;
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>${domain}/cam-nang</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${domain}/cam-nang/bi-quyet-san-ma-shopee</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${domain}/cam-nang/tranh-lua-dao-lazada</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${domain}/cam-nang/bi-quyet-mua-hang-dien-may-tiki</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${domain}/cam-nang/so-sanh-vi-dien-tu-uu-dai</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${domain}/cam-nang/ke-hoach-chi-tieu-gia-dinh</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${domain}/dieu-khoan</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>monthly</changefreq>
@@ -391,7 +428,7 @@ Sitemap: ${domain}/feed.xml`;
       // logic for Product Page SEO or other pages
       const pathSegments = url.split('/').filter(Boolean);
       const firstSegment = pathSegments[0];
-      const knownStaticRoutes = ['khuyen-mai', 'dieu-khoan', 'bao-mat', 'chinh-sach', 'api', 'robots.txt', 'sitemap.xml', 'ads.txt'];
+      const knownStaticRoutes = ['khuyen-mai', 'cam-nang', 'dieu-khoan', 'bao-mat', 'chinh-sach', 'api', 'robots.txt', 'sitemap.xml', 'ads.txt'];
 
       if (firstSegment && !knownStaticRoutes.includes(firstSegment) && !url.includes('.')) {
         const productId = firstSegment;
@@ -466,6 +503,63 @@ Sitemap: ${domain}/feed.xml`;
           jsonLd = `
             <script type="application/ld+json">${JSON.stringify(breadcrumbs)}</script>
             <script type="application/ld+json">${JSON.stringify(productSchema)}</script>
+            <script type="application/ld+json">${JSON.stringify(orgSchema)}</script>
+          `;
+        }
+      } else if (firstSegment === 'cam-nang') {
+        const subSegment = pathSegments[1];
+        if (subSegment) {
+          const post = BLOG_POSTS.find(p => p.slug === subSegment);
+          if (post) {
+            title = `${post.title} | Mua ngay đi Cẩm Nang`;
+            description = post.description;
+            image = post.image;
+
+            const blogSchema = {
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": post.title,
+              "description": post.description,
+              "image": [post.image],
+              "datePublished": `${post.publishedAt}T08:00:00+07:00`,
+              "author": {
+                "@type": "Person",
+                "name": post.author
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "Mua ngay đi",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": `${domain}/logo.png`
+                }
+              },
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": fullUrl
+              }
+            };
+
+            jsonLd = `
+              <script type="application/ld+json">${JSON.stringify(blogSchema)}</script>
+              <script type="application/ld+json">${JSON.stringify(orgSchema)}</script>
+            `;
+          }
+        } else {
+          title = "Cẩm Nang Mua Sắm & Mẹo Tiết Kiệm | Mua ngay đi";
+          description = "Kinh nghiệm săn mã giảm giá Shopee, Lazada, Tiki, cẩm nang tránh lừa đảo, lập kế hoạch chi tiêu thông thái và quản lý tài chính hiệu quả.";
+          image = "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop";
+
+          const collSchema = {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": title,
+            "description": description,
+            "url": fullUrl
+          };
+
+          jsonLd = `
+            <script type="application/ld+json">${JSON.stringify(collSchema)}</script>
             <script type="application/ld+json">${JSON.stringify(orgSchema)}</script>
           `;
         }
