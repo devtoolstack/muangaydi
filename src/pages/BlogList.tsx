@@ -3,15 +3,20 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { BookOpen, Calendar, Clock, Search, ArrowRight, BookMarked, Sparkles } from 'lucide-react';
-import { BLOG_POSTS, BlogPost } from '../data/blogData';
+import { useProducts } from '../ProductContext';
+import { getMergedBlogPosts } from '../services/blogService';
+import { BlogPost } from '../data/blogData';
 
 export default function BlogList() {
+  const { products } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tất cả');
 
-  const categories = ['Tất cả', ...Array.from(new Set(BLOG_POSTS.map(post => post.category)))];
+  const dynamicBlogPosts = getMergedBlogPosts(products);
 
-  const filteredPosts = BLOG_POSTS.filter(post => {
+  const categories = ['Tất cả', ...Array.from(new Set(dynamicBlogPosts.map(post => post.category)))];
+
+  const filteredPosts = dynamicBlogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));

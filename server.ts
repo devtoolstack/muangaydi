@@ -9,6 +9,28 @@ import * as cheerio from 'cheerio';
 import compression from 'compression';
 import { slugify } from "./src/lib/utils";
 import { BLOG_POSTS } from "./src/data/blogData";
+import { getMergedBlogPosts } from "./src/services/blogService";
+
+function mapRowsToProducts(rows: any[]): any[] {
+  return rows.map((row: any) => ({
+    id: row['Tên sản phẩm'] ? slugify(row['Tên sản phẩm'].toString()) : '',
+    name: row['Tên sản phẩm'] || '',
+    description: row['Mô tả'] || row['Ghi chú'] || '',
+    price: row['Giá khuyến mãi'] 
+      ? (row['Giá khuyến mãi'].toString().includes('đ') ? row['Giá khuyến mãi'] : `${row['Giá khuyến mãi']}đ`) 
+      : (row['Giá gốc'] ? (row['Giá gốc'].toString().includes('đ') ? row['Giá gốc'] : `${row['Giá gốc']}đ`) : ''),
+    originalPrice: row['Giá khuyến mãi'] && row['Giá gốc']
+      ? (row['Giá gốc'].toString().includes('đ') ? row['Giá gốc'] : `${row['Giá gốc']}đ`) 
+      : undefined,
+    image: row['Ảnh'] || 'https://picsum.photos/400/400',
+    category: row['Danh mục'] || 'Chưa phân loại',
+    productUrl: row['Link Affiliate'] || '#',
+    rating: 5,
+    reviews: 100,
+    isHot: row['Tình trạng'] === 'HOT' || row['Tình trạng'] === 'Săn Deal' || false,
+    status: row['Tình trạng'] || ''
+  }));
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -256,37 +278,27 @@ Sitemap: ${domain}/feed.xml`;
     <lastmod>${lastMod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
+  </url>`;
+
+        try {
+          const rows = await fetchProducts();
+          const mapped = mapRowsToProducts(rows);
+          const dynamicBlogPosts = getMergedBlogPosts(mapped);
+
+          dynamicBlogPosts.forEach(post => {
+            sitemap += `
   <url>
-    <loc>${domain}/cam-nang/bi-quyet-san-ma-shopee</loc>
-    <lastmod>${lastMod}</lastmod>
+    <loc>${domain}/cam-nang/${post.slug}</loc>
+    <lastmod>${post.publishedAt}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${domain}/cam-nang/tranh-lua-dao-lazada</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${domain}/cam-nang/bi-quyet-mua-hang-dien-may-tiki</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${domain}/cam-nang/so-sanh-vi-dien-tu-uu-dai</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${domain}/cam-nang/ke-hoach-chi-tieu-gia-dinh</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  </url>`;
+          });
+        } catch (err) {
+          console.error('[Sitemap Dynamic Blogs Error]', err);
+        }
+
+        sitemap += `
   <url>
     <loc>${domain}/dieu-khoan</loc>
     <lastmod>${lastMod}</lastmod>
@@ -333,31 +345,30 @@ Sitemap: ${domain}/feed.xml`;
 
       if (urlPath === '/rss.xml' || urlPath === '/feed.xml') {
         const rows = await fetchProducts();
+        const mapped = mapRowsToProducts(rows);
+        const dynamicBlogPosts = getMergedBlogPosts(mapped);
         const lastModUTC = new Date().toUTCString();
         let rss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày</title>
+  <title>Cẩm Nang Mua Sắm &amp; Mẹo Tiết Kiệm | Mua ngay đi</title>
   <link>${domain}</link>
-  <description>Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ.</description>
+  <description>Nhật ký chia sẻ bí quyết săn mã giảm giá Shopee, Lazada, Tiki, cẩm nang phòng tranh lừa đảo và cách tiết kiệm của người dùng thông thái.</description>
   <language>vi</language>
   <lastBuildDate>${lastModUTC}</lastBuildDate>
   <atom:link href="${domain}/rss.xml" rel="self" type="application/rss+xml" />`;
 
-        rows.slice(0, 50).forEach(row => {
-          if (row['Tên sản phẩm']) {
-            const slug = slugify(row['Tên sản phẩm'].toString());
-            const fullProdUrl = `${domain}/${slug}`;
-            const desc = (row['Mô tả'] || '').substring(0, 200).replace(/[<>]/g, '');
-            rss += `
+        dynamicBlogPosts.slice(0, 50).forEach(post => {
+          const fullPostUrl = `${domain}/cam-nang/${post.slug}`;
+          const cleanDesc = post.description.replace(/[<>]/g, '').replace(/&/g, '&amp;');
+          rss += `
   <item>
-    <title>${row['Tên sản phẩm'].replace(/&/g, '&amp;')}</title>
-    <link>${fullProdUrl}</link>
-    <guid>${fullProdUrl}</guid>
-    <description>${desc}</description>
-    <pubDate>${lastModUTC}</pubDate>
+    <title>${post.title.replace(/&/g, '&amp;')}</title>
+    <link>${fullPostUrl}</link>
+    <guid>${fullPostUrl}</guid>
+    <description>${cleanDesc}</description>
+    <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
   </item>`;
-          }
         });
 
         rss += `</channel></rss>`;
@@ -509,7 +520,10 @@ Sitemap: ${domain}/feed.xml`;
       } else if (firstSegment === 'cam-nang') {
         const subSegment = pathSegments[1];
         if (subSegment) {
-          const post = BLOG_POSTS.find(p => p.slug === subSegment);
+          const rows = await fetchProducts();
+          const mapped = mapRowsToProducts(rows);
+          const dynamicBlogPosts = getMergedBlogPosts(mapped);
+          const post = dynamicBlogPosts.find(p => p.slug === subSegment);
           if (post) {
             title = `${post.title} | Mua ngay đi Cẩm Nang`;
             description = post.description;

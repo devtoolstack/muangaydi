@@ -3,12 +3,15 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'motion/react';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Link2, Sparkles, BookOpen, ChevronRight } from 'lucide-react';
-import { BLOG_POSTS } from '../data/blogData';
+import { useProducts } from '../ProductContext';
+import { getMergedBlogPosts } from '../services/blogService';
 
 export default function BlogPost() {
   const { id } = useParams<{ id: string }>();
+  const { products } = useProducts();
   
-  const post = BLOG_POSTS.find(p => p.slug === id);
+  const dynamicBlogPosts = getMergedBlogPosts(products);
+  const post = dynamicBlogPosts.find(p => p.slug === id);
 
   if (!post) {
     return (
@@ -28,7 +31,7 @@ export default function BlogPost() {
   }
 
   // Related posts (excluding current post)
-  const relatedPosts = BLOG_POSTS.filter(p => p.slug !== post.slug).slice(0, 3);
+  const relatedPosts = dynamicBlogPosts.filter(p => p.slug !== post.slug).slice(0, 3);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
