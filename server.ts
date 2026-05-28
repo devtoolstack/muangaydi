@@ -437,11 +437,11 @@ Sitemap: ${domain}/feed.xml`;
       `;
 
       // logic for Product Page SEO or other pages
-      const pathSegments = url.split('/').filter(Boolean);
+      const pathSegments = pathOnly.split('/').filter(Boolean);
       const firstSegment = pathSegments[0];
       const knownStaticRoutes = ['khuyen-mai', 'cam-nang', 'dieu-khoan', 'bao-mat', 'chinh-sach', 'api', 'robots.txt', 'sitemap.xml', 'ads.txt'];
 
-      if (firstSegment && !knownStaticRoutes.includes(firstSegment) && !url.includes('.')) {
+      if (firstSegment && !knownStaticRoutes.includes(firstSegment) && !pathOnly.includes('.')) {
         const productId = firstSegment;
         const rows = await fetchProducts();
         const product = rows.find(row => 
