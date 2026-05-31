@@ -442,8 +442,10 @@ Sitemap: ${domain}/feed.xml`;
       } else {
         let templatePath = "";
         const pathsToTry = [
+          path.join(process.cwd(), "templates/index.html"),
           path.join(process.cwd(), "dist/index.html"),
           path.join(process.cwd(), "../dist/index.html"),
+          path.join(__dirname, "../templates/index.html"),
           path.join(__dirname, "dist/index.html"),
           path.join(__dirname, "../dist/index.html"),
           path.join(__dirname, "../../dist/index.html"),
