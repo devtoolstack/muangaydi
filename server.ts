@@ -1,5 +1,4 @@
 import express from "express";
-import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
@@ -237,13 +236,30 @@ const PORT = 3000;
 
   let vite: any;
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "custom",
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
+    let distPath = path.join(process.cwd(), 'dist');
+    if (!fs.existsSync(distPath)) {
+      const pathsToTry = [
+        path.join(process.cwd(), 'dist'),
+        path.join(process.cwd(), '../dist'),
+        path.join(__dirname, 'dist'),
+        path.join(__dirname, '../dist'),
+        path.join(__dirname, '../../dist'),
+      ];
+      for (const p of pathsToTry) {
+        if (fs.existsSync(p)) {
+          distPath = p;
+          break;
+        }
+      }
+    }
+    console.log(`[Static] Mounting static path: ${distPath}`);
     app.use(express.static(distPath, { 
       index: false,
       maxAge: '1d' // Cache assets for 1 day
@@ -424,7 +440,32 @@ Sitemap: ${domain}/feed.xml`;
         template = fs.readFileSync(path.join(process.cwd(), "index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
       } else {
-        template = fs.readFileSync(path.join(process.cwd(), "dist/index.html"), "utf-8");
+        let templatePath = "";
+        const pathsToTry = [
+          path.join(process.cwd(), "dist/index.html"),
+          path.join(process.cwd(), "../dist/index.html"),
+          path.join(__dirname, "dist/index.html"),
+          path.join(__dirname, "../dist/index.html"),
+          path.join(__dirname, "../../dist/index.html"),
+        ];
+        
+        for (const p of pathsToTry) {
+          if (fs.existsSync(p)) {
+            templatePath = p;
+            break;
+          }
+        }
+        
+        if (!templatePath) {
+          console.error('[Error] Could not locate dist/index.html. Tried paths:', pathsToTry);
+          if (fs.existsSync(path.join(process.cwd(), "index.html"))) {
+            templatePath = path.join(process.cwd(), "index.html");
+          } else {
+            throw new Error(`Cannot find index.html in any known path. Tried paths: ${JSON.stringify(pathsToTry)}`);
+          }
+        }
+        
+        template = fs.readFileSync(templatePath, "utf-8");
       }
 
       // Default SEO values
