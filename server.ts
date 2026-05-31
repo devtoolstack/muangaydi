@@ -178,9 +178,8 @@ function generateSimulatedData(sources: any[]) {
   return simulated;
 }
 
-async function startServer() {
-  const app = express();
-  const PORT = 3000;
+const app = express();
+const PORT = 3000;
 
   // Security & Performance Middleware
   app.use(compression());
@@ -392,10 +391,10 @@ Sitemap: ${domain}/feed.xml`;
       let template: string;
       
       if (process.env.NODE_ENV !== "production") {
-        template = fs.readFileSync(path.resolve(__dirname, "index.html"), "utf-8");
+        template = fs.readFileSync(path.join(process.cwd(), "index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
       } else {
-        template = fs.readFileSync(path.resolve(__dirname, "dist/index.html"), "utf-8");
+        template = fs.readFileSync(path.join(process.cwd(), "dist/index.html"), "utf-8");
       }
 
       // Default SEO values
@@ -709,9 +708,10 @@ Sitemap: ${domain}/feed.xml`;
     }
   });
 
+if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://0.0.0.0:${PORT}`);
   });
 }
 
-startServer();
+export default app;
