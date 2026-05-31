@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/(assets|icons|logo.png|manifest.json|robots.txt|sitemap.xml|sitemap_pages.xml|sitemap_products.xml|rss.xml|feed.xml|api/.*)",
+      "src": "/(assets|icons|logo.png|manifest.json|robots.txt|sitemap.xml|sitemap_index.xml|sitemap_pages.xml|sitemap_products.xml|rss.xml|feed.xml|api/.*)",
       "dest": "server.ts"
     },
     {

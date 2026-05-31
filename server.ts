@@ -38,7 +38,21 @@ const __dirname = path.dirname(__filename);
 // Helper to fetch products for SSR metadata
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVGYFkgGz1rMHYcK_dnb_Y-QXEoBsuZX_P3juzTgkm8L_cDPDeQva8q3-CtiuU2Ypy0J-g3jhU5hG2/pub?gid=0&single=true&output=csv';
 
+let productCache: {
+  rows: any[];
+  lastUpdate: number;
+} = {
+  rows: [],
+  lastUpdate: 0
+};
+const PRODUCT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
+
 async function fetchProducts() {
+  const now = Date.now();
+  if (productCache.rows.length > 0 && (now - productCache.lastUpdate < PRODUCT_CACHE_TTL)) {
+    return productCache.rows;
+  }
+
   try {
     const response = await fetch(SHEET_URL, { signal: AbortSignal.timeout(10000) });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -47,16 +61,22 @@ async function fetchProducts() {
       Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true,
-        complete: (results) => resolve(results.data),
+        complete: (results) => {
+          if (results.data && results.data.length > 0) {
+            productCache.rows = results.data;
+            productCache.lastUpdate = now;
+          }
+          resolve(results.data);
+        },
         error: (err) => {
           console.error('[PapaParse Error]', err);
-          resolve([]);
+          resolve(productCache.rows);
         }
       });
     });
   } catch (e: any) {
     console.error('[FetchProducts Error]', e.message);
-    return [];
+    return productCache.rows;
   }
 }
 
@@ -227,8 +247,9 @@ const PORT = 3000;
   app.get(['/robots.txt', '/sitemap.xml', '/sitemap_index.xml', '/sitemap_pages.xml', '/sitemap_products.xml', '/rss.xml', '/feed.xml'], async (req, res) => {
     try {
       const urlPath = req.path;
-      const protocol = req.get('x-forwarded-proto') || 'https';
-      const host = req.get('host');
+      const host = req.get('host') || 'muangaydi-tau.vercel.app';
+      const isLocal = host.includes('localhost') || host.includes('127.0.0.1') || host.includes('0.0.0.0');
+      const protocol = isLocal ? 'http' : 'https';
       const domain = `${protocol}://${host}`;
 
       if (urlPath === '/robots.txt') {
@@ -285,10 +306,12 @@ Sitemap: ${domain}/feed.xml`;
           const dynamicBlogPosts = getMergedBlogPosts(mapped);
 
           dynamicBlogPosts.forEach(post => {
+            const rawDate = post.publishedAt || lastMod;
+            const postDate = rawDate.includes('T') ? rawDate.split('T')[0] : rawDate;
             sitemap += `
   <url>
     <loc>${domain}/cam-nang/${post.slug}</loc>
-    <lastmod>${post.publishedAt}</lastmod>
+    <lastmod>${postDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
@@ -359,14 +382,13 @@ Sitemap: ${domain}/feed.xml`;
 
         dynamicBlogPosts.slice(0, 50).forEach(post => {
           const fullPostUrl = `${domain}/cam-nang/${post.slug}`;
-          const cleanDesc = post.description.replace(/[<>]/g, '').replace(/&/g, '&amp;');
           rss += `
   <item>
-    <title>${post.title.replace(/&/g, '&amp;')}</title>
+    <title><![CDATA[${post.title}]]></title>
     <link>${fullPostUrl}</link>
     <guid>${fullPostUrl}</guid>
-    <description>${cleanDesc}</description>
-    <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
+    <description><![CDATA[${post.description}]]></description>
+    <pubDate>${new Date(post.publishedAt || Date.now()).toUTCString()}</pubDate>
   </item>`;
         });
 
@@ -383,8 +405,9 @@ Sitemap: ${domain}/feed.xml`;
     try {
       const url = req.originalUrl;
       const pathOnly = req.path;
-      const protocol = req.get('x-forwarded-proto') || 'https';
-      const host = req.get('host');
+      const host = req.get('host') || 'muangaydi-tau.vercel.app';
+      const isLocal = host.includes('localhost') || host.includes('127.0.0.1') || host.includes('0.0.0.0');
+      const protocol = isLocal ? 'http' : 'https';
       const domain = `${protocol}://${host}`;
       const fullUrl = `${domain}${url}`;
 
@@ -688,11 +711,9 @@ Sitemap: ${domain}/feed.xml`;
 
       // Clean up existing tags to avoid conflicts before injecting new ones
       let html = template;
-      html = html.replace(/<title>.*?<\/title>/gi, '');
-      html = html.replace(/<meta name="description".*?>/gi, '');
-      html = html.replace(/<meta property="og:.*?".*?>/gi, '');
-      html = html.replace(/<meta name="twitter:.*?".*?>/gi, '');
-      html = html.replace(/<meta name="google-site-verification".*?>/gi, '');
+      html = html.replace(/<title>[\s\S]*?<\/title>/gi, '');
+      html = html.replace(/<meta\s+[^>]*?(?:name|property)=["'](?:description|og:[^"']*?|twitter:[^"']*?|google-site-verification|geo\.[^"']*?|ICBM)["'][^>]*?>/gi, '');
+      html = html.replace(/<link\s+[^>]*?rel=["'](?:canonical|alternate)["'][^>]*?>/gi, '');
       html = html.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?<\/script>/gi, '');
       
       // Inject meta tags immediately after the <head> tag for best verification results (as recommended by Google)
