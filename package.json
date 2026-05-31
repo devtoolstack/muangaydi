@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx server.ts",
     "start": "node api/server.js",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=esm --packages=external --define:process.env.NODE_ENV=\\\"production\\\" --outfile=api/server.js",
+    "build": "vite build && mkdir -p api/dist && cp dist/index.html api/dist/index.html && esbuild server.ts --bundle --platform=node --format=esm --packages=external --define:process.env.NODE_ENV=\\\"production\\\" --outfile=api/server.js",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
