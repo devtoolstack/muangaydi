@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/server.js",
+      "src": "server.js",
       "use": "@vercel/node",
       "config": {
         "includeFiles": ["dist/**"]
@@ -12,11 +12,11 @@
   "routes": [
     {
       "src": "/(assets|icons|logo.png|manifest.json|robots.txt|sitemap.xml|sitemap_index.xml|sitemap_pages.xml|sitemap_products.xml|rss.xml|feed.xml|api/.*)",
-      "dest": "api/server.js"
+      "dest": "server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "api/server.js"
+      "dest": "server.js"
     }
   ]
 }
