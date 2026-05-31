@@ -1,6 +1,5 @@
 // server.ts
 import express from "express";
-import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
@@ -935,15 +934,31 @@ app.get("/api/coupons", async (req, res) => {
   }
   res.json(couponCache.data);
 });
-var vite;
-if (process.env.NODE_ENV !== "production") {
+if (false) {
+  const { createServer: createViteServer } = await null;
   vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "custom"
   });
   app.use(vite.middlewares);
 } else {
-  const distPath = path.join(process.cwd(), "dist");
+  let distPath = path.join(process.cwd(), "dist");
+  if (!fs.existsSync(distPath)) {
+    const pathsToTry = [
+      path.join(process.cwd(), "dist"),
+      path.join(process.cwd(), "../dist"),
+      path.join(__dirname, "dist"),
+      path.join(__dirname, "../dist"),
+      path.join(__dirname, "../../dist")
+    ];
+    for (const p of pathsToTry) {
+      if (fs.existsSync(p)) {
+        distPath = p;
+        break;
+      }
+    }
+  }
+  console.log(`[Static] Mounting static path: ${distPath}`);
   app.use(express.static(distPath, {
     index: false,
     maxAge: "1d"
@@ -1104,11 +1119,33 @@ app.get("*", async (req, res) => {
     const domain = `${protocol}://${host}`;
     const fullUrl = `${domain}${url}`;
     let template;
-    if (process.env.NODE_ENV !== "production") {
+    if (false) {
       template = fs.readFileSync(path.join(process.cwd(), "index.html"), "utf-8");
       template = await vite.transformIndexHtml(url, template);
     } else {
-      template = fs.readFileSync(path.join(process.cwd(), "dist/index.html"), "utf-8");
+      let templatePath = "";
+      const pathsToTry = [
+        path.join(process.cwd(), "dist/index.html"),
+        path.join(process.cwd(), "../dist/index.html"),
+        path.join(__dirname, "dist/index.html"),
+        path.join(__dirname, "../dist/index.html"),
+        path.join(__dirname, "../../dist/index.html")
+      ];
+      for (const p of pathsToTry) {
+        if (fs.existsSync(p)) {
+          templatePath = p;
+          break;
+        }
+      }
+      if (!templatePath) {
+        console.error("[Error] Could not locate dist/index.html. Tried paths:", pathsToTry);
+        if (fs.existsSync(path.join(process.cwd(), "index.html"))) {
+          templatePath = path.join(process.cwd(), "index.html");
+        } else {
+          throw new Error(`Cannot find index.html in any known path. Tried paths: ${JSON.stringify(pathsToTry)}`);
+        }
+      }
+      template = fs.readFileSync(templatePath, "utf-8");
     }
     let title = "Mua ngay \u0111i | S\u0103n Deal Gi\xE1 H\u1EDDi M\u1ED7i Ng\xE0y";
     let description = "T\u1ED5ng h\u1EE3p m\xE3 gi\u1EA3m gi\xE1 v\xE0 deals h\u1EDDi nh\u1EA5t t\u1EEB Shopee, Lazada, Tiki. C\u1EADp nh\u1EADt li\xEAn t\u1EE5c m\u1ED7i gi\u1EDD, ch\u1ED1t \u0111\u01A1n ngay kh\xF4ng c\u1EA7n lo gi\xE1!";
@@ -1384,7 +1421,7 @@ ${metaTags}`);
     res.status(500).end(e.stack);
   }
 });
-if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+if (!process.env.VERCEL) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://0.0.0.0:${PORT}`);
   });
