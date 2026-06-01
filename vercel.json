@@ -1,14 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "api/server.js": {
+    "api/index.ts": {
       "includeFiles": "templates/index.html"
     }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/server.js"
+      "destination": "/api/index.ts"
     }
   ]
 }
