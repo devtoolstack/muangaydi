@@ -60,9 +60,16 @@ async function fetchProducts() {
   }
 
   try {
-    const response = await fetch(SHEET_URL, { signal: AbortSignal.timeout(10000) });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const csvData = await response.text();
+    const response = await axios.get(SHEET_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cache-Control': 'no-cache'
+      },
+      timeout: 10000
+    });
+    const csvData = response.data;
     return new Promise<any[]>((resolve) => {
       Papa.parse(csvData, {
         header: true,
@@ -473,7 +480,7 @@ Sitemap: ${domain}/feed.xml`;
       // Default SEO values
       let title = "Mua ngay đi | Săn Deal Giá Hời Mỗi Ngày";
       let description = "Tổng hợp mã giảm giá và deals hời nhất từ Shopee, Lazada, Tiki. Cập nhật liên tục mỗi giờ, chốt đơn ngay không cần lo giá!";
-      let image = "https://og-image.vercel.app/**MUA%20NGAY%20%C4%90I**.png?theme=dark&md=1&fontSize=150px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg&images=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1607082348824-0a96f2a4b9da%3Fq%3D80%26w%3D400%26auto%3Dformat%26fit%3Dcrop";
+      let image = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1200&auto=format&fit=crop";
       
       const orgSchema = {
         "@context": "https://schema.org",
@@ -652,7 +659,7 @@ Sitemap: ${domain}/feed.xml`;
       } else if (url === '/khuyen-mai') {
         title = "Tổng Hợp Mã Giảm Giá Shopee, Lazada, Tiki | Mua ngay đi";
         description = "Lấy ngay mã giảm giá Shopee 50K, voucher Lazada 400K và freeship Tiki mới nhất hôm nay. Tiết kiệm tối đa khi mua sắm online.";
-        image = "https://og-image.vercel.app/M%C3%83%20GI%E1%BA%A2M%20GI%C3%81%0A**MUA%20NGAY%20%C4%90I**.png?theme=dark&md=1&fontSize=100px";
+        image = "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=1200&auto=format&fit=crop";
         
         const faqSchema = {
           "@context": "https://schema.org",
@@ -691,7 +698,7 @@ Sitemap: ${domain}/feed.xml`;
         `;
       } else {
         // Home page or other, pick the best branded image
-        image = "https://og-image.vercel.app/**MUA%20NGAY%20%C4%90I**.png?theme=dark&md=1&fontSize=125px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg";
+        image = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1200&auto=format&fit=crop";
       }
 
       // Ensure image URL is properly encoded and absolute
