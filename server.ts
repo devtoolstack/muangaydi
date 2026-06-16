@@ -761,8 +761,6 @@ Sitemap: ${domain}/feed.xml`;
           gtag('js', new Date());
           gtag('config', 'G-XW9CBBBE96');
         </script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4995320968318102"
-          crossorigin="anonymous"></script>
         ${jsonLd}
       `;
 
