@@ -725,6 +725,7 @@ Sitemap: ${domain}/feed.xml`;
       
       // Inject meta tags into template
       const metaTags = `
+        <script src="https://quge5.com/88/tag.min.js" data-zone="250404" async data-cfasync="false"></script>
         <title>${title}</title>
         <meta name="description" content="${description}" />
         <meta property="og:title" content="${title}" />
