@@ -65,7 +65,7 @@ export default function Navbar() {
     // For now, search matches product name directly if possible, or just clear
     const match = products.find(p => p.name.toLowerCase() === term.toLowerCase());
     if (match) {
-      navigate(`/${match.id}`);
+      window.open(match.productUrl, '_blank', 'noopener,noreferrer');
     } else {
       setSearchQuery(term);
       navigate('/');
@@ -142,9 +142,11 @@ export default function Navbar() {
                       <TrendingUp size={12} /> Gợi ý sản phẩm
                     </p>
                     {suggestions.map((product) => (
-                      <Link
+                      <a
                         key={product.id}
-                        to={`/${product.id}`}
+                        href={product.productUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         onClick={() => {
                           setShowSuggestions(false);
                           setSearchTerm('');
@@ -160,7 +162,7 @@ export default function Navbar() {
                           <p className="text-sm text-slate-300 group-hover:text-white transition-colors truncate font-medium">{product.name}</p>
                           <p className="text-xs text-brand-primary font-bold">{product.price}</p>
                         </div>
-                      </Link>
+                      </a>
                     ))}
                   </div>
                 )}
@@ -227,9 +229,11 @@ export default function Navbar() {
             {searchTerm && suggestions.length > 0 && (
               <div className="mt-4 bg-white/5 rounded-2xl border border-white/10 overflow-hidden divide-y divide-white/5">
                 {suggestions.map((product) => (
-                  <Link
+                  <a
                     key={product.id}
-                    to={`/${product.id}`}
+                    href={product.productUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => {
                       setIsOpen(false);
                       setSearchTerm('');
@@ -241,7 +245,7 @@ export default function Navbar() {
                       <p className="text-sm text-white font-bold line-clamp-1">{product.name}</p>
                       <p className="text-xs text-brand-primary">{product.price}</p>
                     </div>
-                  </Link>
+                  </a>
                 ))}
               </div>
             )}

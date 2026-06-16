@@ -30,6 +30,18 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then((registration) => {
+          console.log('Monetag Service Worker registered successfully:', registration);
+        })
+        .catch((error) => {
+          console.error('Monetag Service Worker registration failed:', error);
+        });
+    }
+  }, []);
+
   return (
     <HelmetProvider>
       <ProductProvider>

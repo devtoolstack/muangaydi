@@ -64,7 +64,12 @@ export default function HotDeals({ products }: HotDealsProps) {
               </div>
 
               {/* Image Area */}
-              <Link to={`/${product.id}`} className="block relative aspect-[4/3] rounded-[32px] overflow-hidden mb-6 bg-slate-900 group-hover:scale-[1.02] transition-transform duration-500">
+              <a 
+                href={product.productUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block relative aspect-[4/3] rounded-[32px] overflow-hidden mb-6 bg-slate-900 group-hover:scale-[1.02] transition-transform duration-500"
+              >
                 <img 
                   src={product.image} 
                   alt={product.name} 
@@ -73,16 +78,21 @@ export default function HotDeals({ products }: HotDealsProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-8">
                   <div className="bg-white text-black px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl">
-                    Chi tiết sản phẩm
+                    SĂN DEAL NGAY
                   </div>
                 </div>
-              </Link>
+              </a>
 
               {/* Content Area */}
               <div className="px-4 pb-4 flex-1 flex flex-col">
-                <Link to={`/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-3 line-clamp-1 leading-tight uppercase tracking-tight text-lg sm:text-xl md:text-2xl">
+                <a 
+                  href={product.productUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-3 line-clamp-1 leading-tight uppercase tracking-tight text-lg sm:text-xl md:text-2xl"
+                >
                   {product.name}
-                </Link>
+                </a>
                 
                 <p className="text-slate-400 text-xs sm:text-sm mb-6 line-clamp-2 leading-relaxed font-medium">
                   {product.description}

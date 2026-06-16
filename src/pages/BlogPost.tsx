@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Link2, Sparkles, BookOpen, ChevronRight } from 'lucide-react';
 import { useProducts } from '../ProductContext';
 import { getMergedBlogPosts } from '../services/blogService';
+import AdZone from '../components/AdZone'; // Import AdZone
 
 export default function BlogPost() {
   const { id } = useParams<{ id: string }>();
@@ -185,6 +186,9 @@ export default function BlogPost() {
                 Nhận Voucher Ngay
               </Link>
             </div>
+
+            {/* Sidebar Ad Placement */}
+            <AdZone format="sidebar" zoneId="blog-sidebar-ad" />
 
             {/* Recommended reading */}
             <div className="glass border border-white/5 p-6 rounded-3xl bg-white/[0.01]">

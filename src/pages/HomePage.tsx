@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import HotDeals from '../components/HotDeals';
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
+import AdZone from '../components/AdZone';
 import { CATEGORIES } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { Filter, Search, Tag, ChevronLeft, ChevronRight, BookOpen, ArrowRight, Clock, Calendar, ChevronRight as ChevronRightIcon } from 'lucide-react';
@@ -101,6 +102,11 @@ export default function HomePage() {
       
       <HotDeals products={products} />
       
+      {/* Premium Horizontal Ad Banner Position */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-8">
+        <AdZone format="banner" zoneId="homepage-top-banner" />
+      </div>
+      
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         {/* Category Header & Search */}
         <div className="flex flex-col gap-8 sm:gap-12 mb-12 sm:mb-16">
@@ -176,8 +182,14 @@ export default function HomePage() {
             ))
           ) : (
             <AnimatePresence mode="popLayout">
-              {paginatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {paginatedProducts.map((product, index) => (
+                <React.Fragment key={product.id}>
+                  <ProductCard product={product} />
+                  {/* Blended Native Advertisement Card after the 5th product card */}
+                  {index === 4 && (
+                    <AdZone format="native" zoneId="homepage-native-grid-1" />
+                  )}
+                </React.Fragment>
               ))}
             </AnimatePresence>
           )}

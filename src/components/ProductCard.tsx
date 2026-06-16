@@ -128,7 +128,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Image section */}
-      <Link to={`/${product.id}`} className="block relative aspect-[4/3] overflow-hidden m-4 rounded-2xl border border-white/5 bg-slate-900">
+      <a 
+        href={product.productUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="block relative aspect-[4/3] overflow-hidden m-4 rounded-2xl border border-white/5 bg-slate-900"
+      >
         <img 
           src={product.image} 
           alt={`${product.name} - Deal hời giá rẻ tại Mua ngay đi`} 
@@ -137,7 +142,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
           referrerPolicy="strict-origin-when-cross-origin"
         />
-      </Link>
+      </a>
 
       {/* Content section */}
       <div className="p-4 sm:p-6 pt-2 flex-1 flex flex-col">
@@ -149,9 +154,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-slate-500 text-[9px] sm:text-[10px]">({product.reviews})</span>
         </div>
         
-        <Link to={`/${product.id}`} className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-sm sm:text-lg">
+        <a 
+          href={product.productUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="font-display font-black text-white group-hover:text-brand-primary transition-colors mb-2 line-clamp-2 leading-tight uppercase tracking-tight text-sm sm:text-lg"
+        >
           {product.name}
-        </Link>
+        </a>
         
         <p className="text-slate-400 text-[11px] sm:text-sm mb-4 sm:mb-6 line-clamp-2 leading-relaxed">
           {product.description}

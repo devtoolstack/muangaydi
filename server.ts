@@ -223,6 +223,24 @@ const PORT = parseInt(process.env.PORT || "3000");
     next();
   });
 
+  // Service Worker route for monetization (Monetag/PropellerAds)
+  app.get('/sw.js', (req, res) => {
+    const possiblePaths = [
+      path.join(process.cwd(), 'public', 'sw.js'),
+      path.join(process.cwd(), 'dist', 'sw.js'),
+      path.join(process.cwd(), 'sw.js')
+    ];
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        res.setHeader('Content-Type', 'application/javascript');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Service-Worker-Allowed', '/');
+        return res.sendFile(p);
+      }
+    }
+    return res.status(404).send('Service Worker not found');
+  });
+
   // Coupons API Endpoint with Cache logic
   app.get('/api/coupons', async (req, res) => {
     const now = Date.now();

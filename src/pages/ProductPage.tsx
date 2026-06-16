@@ -4,6 +4,7 @@ import { Star, ShieldCheck, Truck, RefreshCcw, ArrowLeft, ShoppingBag, Loader2, 
 import { motion, AnimatePresence } from 'motion/react';
 import { Helmet } from 'react-helmet-async';
 import ProductCard from '../components/ProductCard';
+import AdZone from '../components/AdZone'; // Import AdZone
 import { useProducts } from '../ProductContext';
 
 export default function ProductPage() {
@@ -30,11 +31,20 @@ export default function ProductPage() {
     }
   };
 
-  if (loading) {
+  React.useEffect(() => {
+    if (product && product.productUrl) {
+      // Immediate redirect using replacement to prevent breaking history back button
+      window.location.replace(product.productUrl);
+    }
+  }, [product]);
+
+  if (loading || product) {
     return (
       <div className="pt-40 flex flex-col items-center justify-center py-20 gap-4 min-h-[60vh]">
         <Loader2 className="w-12 h-12 text-brand-primary animate-spin" />
-        <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Đang tải chi tiết sản phẩm...</p>
+        <p className="text-slate-400 font-bold uppercase tracking-widest text-sm text-center px-4 max-w-md">
+          ĐANG CHUYỂN HƯỚNG BẠN ĐẾN TRANG ĐÍCH SĂN DEAL...
+        </p>
       </div>
     );
   }
@@ -264,6 +274,9 @@ export default function ProductPage() {
                 </li>
               </ul>
             </div>
+
+            {/* Sidebar Ad Placement */}
+            <AdZone format="sidebar" zoneId="product-details-sidebar" />
 
             <div className="glass border-white/10 rounded-3xl p-6 sm:p-8">
               <h3 className="text-white font-black uppercase tracking-tight mb-4 text-base sm:text-lg">Cam kết</h3>
