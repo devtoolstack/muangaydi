@@ -214,6 +214,9 @@ function generateSimulatedData(sources: any[]) {
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000");
 
+const isVercel = process.env.VERCEL === "1" || !!process.env.NOW_BUILDER;
+const isProduction = process.env.NODE_ENV === "production" || isVercel;
+
   // Security & Performance Middleware
   app.use(compression());
   app.use((req, res, next) => {
@@ -260,7 +263,7 @@ const PORT = parseInt(process.env.PORT || "3000");
   });
 
   let vite: any;
-  if (process.env.NODE_ENV !== "production") {
+  if (!isProduction) {
     const { createServer: createViteServer } = await import("vite");
     vite = await createViteServer({
       server: { middlewareMode: true },
@@ -461,7 +464,7 @@ Sitemap: ${domain}/feed.xml`;
 
       let template: string;
       
-      if (process.env.NODE_ENV !== "production") {
+      if (!isProduction) {
         template = fs.readFileSync(path.join(process.cwd(), "index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
       } else {
@@ -803,7 +806,7 @@ Sitemap: ${domain}/feed.xml`;
     }
   });
 
-if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+if (!isVercel) {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://0.0.0.0:${PORT}`);
   });
