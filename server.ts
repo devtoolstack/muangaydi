@@ -122,7 +122,8 @@ async function scrapeIPricedCoupons() {
   let allCoupons: any[] = [];
   const seenTitles = new Set<string>();
 
-  for (const source of sources) {
+  // Fetch all sources concurrently with a short, resilient timeout of 2000ms
+  const scrapePromises = sources.map(async (source) => {
     try {
       console.log(`[Scraper] Requesting: ${source.url}`);
       const { data: html } = await axios.get(source.url, {
@@ -133,16 +134,14 @@ async function scrapeIPricedCoupons() {
           'Referer': 'https://www.google.com/',
           'Cache-Control': 'no-cache'
         },
-        timeout: 15000
+        timeout: 2000 // 2 seconds fast timeout to prevent Vercel Function Invocation timeout
       });
 
       const $ = cheerio.load(html);
-      
-      // Selectors for Rehub theme used by iPrice
       const couponCards = $('.woo_list_desc');
-      
       console.log(`[Scraper] Found ${couponCards.length} candidates on ${source.store}`);
 
+      const storeCoupons: any[] = [];
       couponCards.each((i, el) => {
         const title = $(el).find('h2, h3, .font110').first().text().trim();
         const description = $(el).find('.rh_custom_notice').first().text().trim() || $(el).find('p').first().text().trim();
@@ -154,17 +153,16 @@ async function scrapeIPricedCoupons() {
         if (seenTitles.has(uniqueKey)) return;
         seenTitles.add(uniqueKey);
 
-        // Many iPrice coupons are deals, not codes. Fallback to HOTDEAL or try to find mask/code
         let code = $(el).closest('.re_aj_pag_auto_item').find('[data-code]').attr('data-code') || 
                    $(el).closest('.re_aj_pag_auto_item').find('.coupon_value').text().trim() || 'HOTDEAL';
 
         const expiry = $(el).find('.listtimeleft').first().text().trim() || 'Hết hạn sớm';
 
-        allCoupons.push({
-          id: `scraped-${source.store}-${i}-${Date.now()}`,
+        storeCoupons.push({
+          id: `scraped-${source.store}-${i}-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           store: source.store,
           title: title,
-          code: code.length > 20 ? 'HOTDEAL' : code, // Clean up long bogus codes
+          code: code.length > 20 ? 'HOTDEAL' : code,
           description: description || `Mã giảm giá ${source.store} cực hời, lấy ngay tại MuaNgayDi.`,
           expiryDate: expiry.replace('Hết hạn trong ', '').replace('Last day', 'Sắp hết hạn'),
           copyCount: Math.floor(Math.random() * 5000) + 1000,
@@ -173,9 +171,20 @@ async function scrapeIPricedCoupons() {
           minSpend: 'Xem chi tiết'
         });
       });
+      return storeCoupons;
     } catch (error: any) {
       console.error(`[Scraper] Error ${source.store}:`, error.message);
+      return [];
     }
+  });
+
+  try {
+    const results = await Promise.all(scrapePromises);
+    for (const storeCoupons of results) {
+      allCoupons = allCoupons.concat(storeCoupons);
+    }
+  } catch (err: any) {
+    console.error('[Scraper] Promise.all processing failed:', err.message);
   }
 
   if (allCoupons.length === 0) {
