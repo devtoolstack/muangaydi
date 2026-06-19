@@ -376,6 +376,25 @@ export default function HomePage() {
                 </div>
               </details>
             </div>
+
+            {/* BuildPublic Verification Badge */}
+            <div className="mt-16 flex flex-col items-center justify-center gap-2">
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Xác minh đối tác</span>
+              <a 
+                href="https://buildpublic.cc/p/mang-xa-hoi-muangaydi?ref=buildpublic.cc" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="opacity-80 hover:opacity-100 transition-all hover:scale-105 active:scale-95 duration-200 block"
+              >
+                <img 
+                  src="https://buildpublic.cc/badge/mang-xa-hoi-muangaydi/light" 
+                  alt="Mạng xã hội Muangaydi - buildpublic.cc" 
+                  width="170" 
+                  height="50" 
+                  className="rounded-xl shadow-lg border border-white/5"
+                />
+              </a>
+            </div>
           </div>
         </div>
       </section>

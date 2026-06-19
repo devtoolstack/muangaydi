@@ -71,12 +71,28 @@ export default function Footer() {
             <p className="text-slate-500 text-xs font-medium">
               © 2024 Mua ngay đi. Một sản phẩm tối ưu bởi AI cho cộng đồng săn deal Việt Nam.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-1 text-[10px] text-slate-500">
                 <ShieldCheck size={12} className="text-green-500" /> Kết nối an toàn SSL
               </div>
               <div className="flex items-center gap-1 text-[10px] text-slate-500">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Đang trực tuyến
+              </div>
+              <div className="mt-2 md:mt-0 block">
+                <a 
+                  href="https://buildpublic.cc/p/mang-xa-hoi-muangaydi?ref=buildpublic.cc" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="opacity-70 hover:opacity-100 transition-opacity block"
+                >
+                  <img 
+                    src="https://buildpublic.cc/badge/mang-xa-hoi-muangaydi/light" 
+                    alt="Mạng xã hội Muangaydi - buildpublic.cc" 
+                    width="170" 
+                    height="50" 
+                    className="rounded-lg border border-white/5 shadow" 
+                  />
+                </a>
               </div>
             </div>
           </div>
