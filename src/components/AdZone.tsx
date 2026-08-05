@@ -4,6 +4,7 @@ import { Tag, Sparkles, TrendingUp, ShieldCheck, ArrowUpRight } from 'lucide-rea
 interface AdZoneProps {
   zoneId?: string;
   format?: 'banner' | 'native' | 'sidebar' | 'inline';
+  key?: string;
 }
 
 export default function AdZone({ zoneId, format = 'inline' }: AdZoneProps) {

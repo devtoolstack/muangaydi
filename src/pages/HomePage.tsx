@@ -73,9 +73,18 @@ export default function HomePage() {
     setCurrentPage(1);
   }, [selectedCategory, selectedPriceRange, searchQuery]);
 
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  // On page 1, display 23 products + 1 AdZone card = 24 total grid items (8 full rows x 3 columns)
+  const PAGE_1_PRODUCTS = 23;
+  const totalPages = filteredProducts.length <= PAGE_1_PRODUCTS
+    ? 1
+    : 1 + Math.ceil((filteredProducts.length - PAGE_1_PRODUCTS) / ITEMS_PER_PAGE);
+
+  const startIndex = currentPage === 1
+    ? 0
+    : PAGE_1_PRODUCTS + (currentPage - 2) * ITEMS_PER_PAGE;
+
+  const currentLimit = currentPage === 1 ? PAGE_1_PRODUCTS : ITEMS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + currentLimit);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -180,15 +189,15 @@ export default function HomePage() {
             ))
           ) : (
             <AnimatePresence mode="popLayout">
-              {paginatedProducts.map((product, index) => (
-                <React.Fragment key={product.id}>
-                  <ProductCard product={product} />
-                  {/* Blended Native Advertisement Card after the 5th product card */}
-                  {index === 4 && (
-                    <AdZone format="native" zoneId="homepage-native-grid-1" />
-                  )}
-                </React.Fragment>
-              ))}
+              {paginatedProducts.flatMap((product, index) => {
+                const items = [<ProductCard key={product.id} product={product} />];
+                if (currentPage === 1 && index === 4) {
+                  items.push(
+                    <AdZone key="homepage-native-grid-1" format="native" zoneId="homepage-native-grid-1" />
+                  );
+                }
+                return items;
+              })}
             </AnimatePresence>
           )}
         </div>
