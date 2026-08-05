@@ -29,12 +29,22 @@ export async function fetchCoupons(): Promise<Coupon[]> {
   }
 }
 
-export async function fetchProductsFromSheet(): Promise<Product[]> {
+let cachedProducts: Product[] | null = null;
+let lastFetchTime = 0;
+const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes cache
+
+export async function fetchProductsFromSheet(forceRefresh = false): Promise<Product[]> {
+  const now = Date.now();
+  if (!forceRefresh && cachedProducts && (now - lastFetchTime < CACHE_DURATION_MS)) {
+    return cachedProducts;
+  }
+
   try {
     const response = await fetch(SHEET_URL);
+    if (!response.ok) throw new Error('Sheet fetch failed');
     const csvData = await response.text();
     
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true,
@@ -57,15 +67,19 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
             isHot: row['Tình trạng'] === 'HOT' || row['Tình trạng'] === 'Săn Deal' || false,
             status: row['Tình trạng'] || ''
           }));
+          
+          cachedProducts = products;
+          lastFetchTime = Date.now();
           resolve(products);
         },
         error: (error: any) => {
-          reject(error);
+          console.error('Papa parse error:', error);
+          resolve(cachedProducts || []);
         }
       });
     });
   } catch (error) {
     console.error('Error fetching sheet data:', error);
-    return [];
+    return cachedProducts || [];
   }
 }

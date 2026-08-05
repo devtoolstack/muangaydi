@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Flame, ArrowRight, Zap, Star, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,9 @@ interface HotDealsProps {
 }
 
 export default function HotDeals({ products }: HotDealsProps) {
-  const hotProducts = products.filter(p => p.isHot).slice(0, 6);
+  const hotProducts = useMemo(() => {
+    return products.filter(p => p.isHot).slice(0, 6);
+  }, [products]);
 
   if (hotProducts.length === 0) return null;
 
@@ -75,6 +77,8 @@ export default function HotDeals({ products }: HotDealsProps) {
                 <img 
                   src={product.image} 
                   alt={product.name} 
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80"
                   referrerPolicy="no-referrer"
                 />

@@ -9,7 +9,7 @@ interface ProductCardProps {
   key?: string;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+function ProductCard({ product }: ProductCardProps) {
   const shareUrl = product.productUrl;
   const shareTitle = product.name;
   const shareText = `Check out this deal: ${product.name}`;
@@ -38,10 +38,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <motion.div 
-      layout
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.2 }}
       className="glass-card group relative flex flex-col overflow-hidden"
     >
       {/* Badge items */}
@@ -189,3 +188,5 @@ export default function ProductCard({ product }: ProductCardProps) {
     </motion.div>
   );
 }
+
+export default React.memo(ProductCard);

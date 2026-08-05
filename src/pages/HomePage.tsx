@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import RiokuponBanner from '../components/RiokuponBanner';
 import HotDeals from '../components/HotDeals';
@@ -31,42 +31,42 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Helper to parse price string to number
-  const parsePrice = (priceStr: string): number => {
+  const parsePrice = useCallback((priceStr: string): number => {
     if (!priceStr) return 0;
     let clean = priceStr.toLowerCase().trim();
     
-    // Handle 'tr' notation first (e.g., 2.5tr -> 2500000)
     if (clean.includes('tr')) {
       const value = parseFloat(clean.replace('tr', '').replace(',', '.'));
       return isNaN(value) ? 0 : value * 1000000;
     }
 
-    // Handle 'k' notation (e.g., 50k -> 50000)
     if (clean.endsWith('k')) {
       const value = parseFloat(clean.replace('k', '').replace(',', '.'));
       return isNaN(value) ? 0 : value * 1000;
     }
     
-    // Default: remove currency symbol and standard delimiters
     clean = clean.replace(/[₫đ.,]/g, "");
     return parseInt(clean) || 0;
-  };
+  }, []);
 
   // Find featured product (most reviews/rating) for SEO image
-  const featuredProduct = products.length > 0 
-    ? [...products].sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews))[0]
-    : null;
+  const featuredProduct = useMemo(() => {
+    if (products.length === 0) return null;
+    return [...products].sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews))[0];
+  }, [products]);
 
-  const filteredProducts = products.filter(p => {
-    const matchesCategory = selectedCategory === "Tất cả" || p.category === selectedCategory;
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.category.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const priceValue = parsePrice(p.price);
-    const matchesPrice = priceValue >= selectedPriceRange.min && priceValue <= selectedPriceRange.max;
+  const filteredProducts = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    return products.filter(p => {
+      const matchesCategory = selectedCategory === "Tất cả" || p.category === selectedCategory;
+      const matchesSearch = !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+      
+      const priceValue = parsePrice(p.price);
+      const matchesPrice = priceValue >= selectedPriceRange.min && priceValue <= selectedPriceRange.max;
 
-    return matchesCategory && matchesSearch && matchesPrice;
-  });
+      return matchesCategory && matchesSearch && matchesPrice;
+    });
+  }, [products, selectedCategory, searchQuery, selectedPriceRange, parsePrice]);
 
   // Pagination logic
   useEffect(() => {
@@ -75,16 +75,21 @@ export default function HomePage() {
 
   // On page 1, display 23 products + 1 AdZone card = 24 total grid items (8 full rows x 3 columns)
   const PAGE_1_PRODUCTS = 23;
-  const totalPages = filteredProducts.length <= PAGE_1_PRODUCTS
-    ? 1
-    : 1 + Math.ceil((filteredProducts.length - PAGE_1_PRODUCTS) / ITEMS_PER_PAGE);
+  
+  const totalPages = useMemo(() => {
+    return filteredProducts.length <= PAGE_1_PRODUCTS
+      ? 1
+      : 1 + Math.ceil((filteredProducts.length - PAGE_1_PRODUCTS) / ITEMS_PER_PAGE);
+  }, [filteredProducts.length]);
 
-  const startIndex = currentPage === 1
-    ? 0
-    : PAGE_1_PRODUCTS + (currentPage - 2) * ITEMS_PER_PAGE;
+  const paginatedProducts = useMemo(() => {
+    const startIndex = currentPage === 1
+      ? 0
+      : PAGE_1_PRODUCTS + (currentPage - 2) * ITEMS_PER_PAGE;
 
-  const currentLimit = currentPage === 1 ? PAGE_1_PRODUCTS : ITEMS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + currentLimit);
+    const currentLimit = currentPage === 1 ? PAGE_1_PRODUCTS : ITEMS_PER_PAGE;
+    return filteredProducts.slice(startIndex, startIndex + currentLimit);
+  }, [filteredProducts, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
