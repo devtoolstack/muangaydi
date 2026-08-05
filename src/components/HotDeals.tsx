@@ -14,14 +14,16 @@ export default function HotDeals({ products }: HotDealsProps) {
   if (hotProducts.length === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-8 relative z-20">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20 animate-pulse">
+          <div className="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20 animate-pulse shrink-0">
             <Flame className="text-white fill-current" size={32} />
           </div>
           <div>
-            <h2 className="font-display text-3xl sm:text-4xl font-black text-white uppercase tracking-tighter">Sản Phẩm HOT</h2>
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-black text-white uppercase tracking-tighter leading-tight">
+              Sản Phẩm HOT
+            </h2>
             <p className="text-slate-500 font-bold uppercase text-[10px] sm:text-xs tracking-widest mt-1">Đang được săn đón nhất trong 24h qua</p>
           </div>
         </div>

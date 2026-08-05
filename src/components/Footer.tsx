@@ -35,7 +35,6 @@ export default function Footer() {
               <li><a href="/?cat=Đồ điện tử" className="hover:text-white transition-colors">Đồ điện tử</a></li>
               <li><a href="/?cat=Gia dụng" className="hover:text-white transition-colors">Thiết kế gia dụng</a></li>
               <li><a href="/?cat=Thời trang" className="hover:text-white transition-colors">Thời trang nam/nữ</a></li>
-              <li><a href="/khuyen-mai" className="hover:text-white transition-colors">Mã giảm giá hot</a></li>
               <li><a href="/cam-nang" className="hover:text-white transition-colors">Cẩm nang mua sắm</a></li>
             </ul>
           </div>

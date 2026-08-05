@@ -201,7 +201,6 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-            <Link to="/khuyen-mai" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Khuyến mãi</Link>
             <Link to="/cam-nang" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Cẩm nang</Link>
           </div>
 
@@ -272,7 +271,6 @@ export default function Navbar() {
             </div>
           </div>
           <div className="pt-4 border-t border-white/5 space-y-1">
-             <Link to="/khuyen-mai" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm text-white font-bold hover:text-brand-primary transition-all">Khuyến mãi & Deals hời</Link>
              <Link to="/cam-nang" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm text-white font-bold hover:text-brand-primary transition-all">Cẩm nang tiết kiệm</Link>
           </div>
         </div>

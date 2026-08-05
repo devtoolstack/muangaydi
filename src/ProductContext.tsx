@@ -33,8 +33,17 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
 export function ProductProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>(() => shuffleArray(MOCK_PRODUCTS));
   const [categories, setCategories] = useState<string[]>(['Tất cả']);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +56,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
     try {
       const data = await fetchProductsFromSheet();
       if (data && data.length > 0) {
-        setProducts(data);
+        setProducts(shuffleArray(data));
         
         // Extract unique categories
         const uniqueCategories = Array.from(new Set(data.map(p => p.category)));
@@ -58,6 +67,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
       setError('Không thể tải dữ liệu từ Google Sheets. Đang sử dụng dữ liệu mẫu.');
       console.error(err);
       // Still set categories from mock products if fetch fails
+      setProducts(shuffleArray(MOCK_PRODUCTS));
       const uniqueCategories = Array.from(new Set(MOCK_PRODUCTS.map(p => p.category)));
       setCategories(['Tất cả', ...uniqueCategories]);
     } finally {

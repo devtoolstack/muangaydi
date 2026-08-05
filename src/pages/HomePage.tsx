@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Hero from '../components/Hero';
+import RiokuponBanner from '../components/RiokuponBanner';
 import HotDeals from '../components/HotDeals';
 import ProductCard from '../components/ProductCard';
 import ProductSkeleton from '../components/ProductSkeleton';
@@ -79,14 +79,19 @@ export default function HomePage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 800, behavior: 'smooth' });
+    const elem = document.getElementById('product-grid');
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 500, behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-24 sm:pt-28">
       <Helmet>
-        <title>Mua ngay đi | Sản phẩm Trend & Giá Tốt</title>
-        <meta name="description" content="Nền tảng mua sắm hiện đại tổng hợp deal hời, sản phẩm xu hướng và mã giảm giá từ Shopee, Lazada, Tiki. Trải nghiệm mua sắm mượt mà nhất." />
+        <title>Mua ngay đi | Hoàn Tiền Mọi Sàn Với Riokupon Vietnam (Mã: U1123163)</title>
+        <meta name="description" content="Nhận hoàn tiền cực lớn khi mua sắm trên Shopee, TikTok Shop, Lazada, Tiki thông qua Riokupon Vietnam với mã giới thiệu U1123163." />
         <link rel="canonical" href={typeof window !== 'undefined' ? window.location.origin : ''} />
         {featuredProduct && (
           <>
@@ -95,19 +100,12 @@ export default function HomePage() {
           </>
         )}
       </Helmet>
-      <Hero 
-        productImage={featuredProduct?.image} 
-        featuredProduct={featuredProduct} 
-      />
+      
+      <RiokuponBanner />
       
       <HotDeals products={products} />
       
-      {/* Premium Horizontal Ad Banner Position */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-8">
-        <AdZone format="banner" zoneId="homepage-top-banner" />
-      </div>
-      
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+      <section id="product-grid" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         {/* Category Header & Search */}
         <div className="flex flex-col gap-8 sm:gap-12 mb-12 sm:mb-16">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-8">
@@ -362,7 +360,7 @@ export default function HomePage() {
                   <span className="group-open:rotate-180 transition-transform">▼</span>
                 </summary>
                 <div className="mt-4 text-slate-400 leading-relaxed border-t border-white/5 pt-4">
-                  Để săn được deal hời, bạn nên thường xuyên theo dõi mục "Gợi ý dành cho bạn" trên trang chủ Mua ngay đi và kiểm tra trang "Khuyến mãi" để lấy mã giảm giá trước khi thanh toán tại các sàn.
+                  Để săn được deal hời, bạn nên thường xuyên theo dõi mục "Sản Phẩm HOT" trên trang chủ Mua ngay đi và kiểm tra hướng dẫn hoàn tiền Riokupon trước khi thanh toán tại các sàn.
                 </div>
               </details>
 

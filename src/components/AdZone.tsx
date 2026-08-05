@@ -95,10 +95,10 @@ export default function AdZone({ zoneId, format = 'inline' }: AdZoneProps) {
           </div>
           <div>
             <h4 className="text-white text-base sm:text-lg font-black uppercase tracking-tight mb-1">
-              🎉 Săn Voucher Hoàn Xu 100% - Shopee Live & Video
+              💚 Riokupon Vietnam - Mua Sắm Hoàn Tiền Tự Động
             </h4>
             <p className="text-slate-400 text-xs sm:text-sm max-w-xl">
-              Cơ hội tiết kiệm thêm tới 500k cho mỗi đơn hàng của bạn. Áp dụng đồng thời với mã freeship toàn quốc. Lịch phát sóng live cập nhật liên tục hôm nay.
+              Nhắn tin mã <strong className="text-amber-300">U1123163</strong> trên Facebook Riokupon Vietnam để kích hoạt tính năng tích xu và hoàn tiền cực hấp dẫn cho mọi đơn hàng.
             </p>
           </div>
         </div>
